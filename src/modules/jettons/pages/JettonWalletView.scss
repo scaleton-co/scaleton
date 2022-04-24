@@ -1,0 +1,18 @@
+span.ant-page-header-heading-title {
+  font-size: 16pt;
+}
+
+.clickable-address {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.jetton-wallet-view {
+  padding: 0 50px;
+  width: 100%;
+
+  &> .ant-page-header {
+    padding: 16px 0;
+  }
+}

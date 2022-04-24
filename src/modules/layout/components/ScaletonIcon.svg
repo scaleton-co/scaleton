@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 32 32">
+  <path fill="#303757" stroke="#fff" d="m14 8.3 4.5 7.7-4.5 7.7H5.1L.7 16 5 8.3z" vector-effect="non-scaling-stroke"/>
+  <path fill="#08c" stroke="#fff" d="m12.5 0 4.2 7.2-4.2 7.2H4.2L0 7.2 4.2 0z" transform="matrix(1.02 0 0 1.03 13.8 1)" vector-effect="non-scaling-stroke"/>
+  <path fill="#035985" stroke="#fff" d="m12.5 0 4.2 7.2-4.2 7.2H4.2L0 7.2 4.2 0z" transform="matrix(1.02 0 0 1.03 13.8 16)" vector-effect="non-scaling-stroke"/>
+</svg>

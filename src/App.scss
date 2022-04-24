@@ -1,0 +1,44 @@
+/**
+  MIXINS
+ */
+
+@mixin compressed-layout {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Layout */
+
+section.ant-layout {
+  background: #ffffff;
+}
+
+@media screen and (min-width: 1300px) {
+  section.ant-layout > .ant-layout-header > div.ant-row {
+    padding: 0 50px;
+  }
+
+  header.compressed,
+  main.compressed,
+  footer > div.compressed,
+  header.nft-market > div,
+  section.ant-layout > .ant-layout-header > div.ant-row {
+    @include compressed-layout;
+  }
+
+  footer > div.compressed {
+    padding: 0 50px;
+  }
+}
+
+section.main-layout {
+  background: #ffffff;
+  min-height: 100%;
+  height: 100%;
+  padding-bottom: 120px;
+  margin-bottom: -120px;
+}
+
+footer.ant-layout-footer {
+  margin-top: 50px;
+}

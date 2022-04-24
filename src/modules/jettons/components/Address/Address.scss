@@ -1,0 +1,22 @@
+$gray-7: #8c8c8c;
+
+span.ton-address {
+  display: inline-flex;
+  max-width: 100%;
+
+  &:before {
+    content: attr(data-head);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &:after {
+    content: attr(data-tail);
+  }
+}
+
+span.ton-empty-address {
+  text-transform: uppercase;
+  color: $gray-7;
+  font-weight: bold;
+}

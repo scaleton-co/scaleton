@@ -1,0 +1,42 @@
+$gray-1: #ffffff;
+$green-5: #73d13d;
+$wallet-button-width: 150px;
+
+.navbar-logo {
+  padding-right: 20px;
+
+  img {
+    height: 32px;
+    width: 32px;
+    margin-right: 8px;
+  }
+
+  a {
+    color: $gray-1;
+    font-size: 24px;
+
+    &:hover {
+      color: $gray-1;
+    }
+  }
+}
+
+.ant-col.ton-price {
+  @media (max-width: 655px) {
+    display: none;
+  }
+}
+
+span.testnet-badge {
+  text-transform: uppercase;
+  font-size: 13pt;
+  font-weight: bold;
+  color: $green-5;
+}
+
+.wallet-button-section {
+  &> button {
+    max-width: $wallet-button-width;
+    width: $wallet-button-width;
+  }
+}

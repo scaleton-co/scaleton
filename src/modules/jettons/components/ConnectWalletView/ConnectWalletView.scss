@@ -1,0 +1,14 @@
+$connect-wallet-button-width: 165px;
+
+.connect-wallet-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+
+  .connect-wallet-button {
+    max-width: $connect-wallet-button-width;
+    width: $connect-wallet-button-width;
+  }
+}
