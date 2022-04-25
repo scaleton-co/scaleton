@@ -89,16 +89,14 @@ export const sendJettons = createAsyncThunk<void, { jettonWallet: string, respon
 
     await tonWalletClient.sendTransaction({
       to: values.jettonWallet,
-      value: TonWeb.utils.toNano(0.08).toString(10),
+      value: TonWeb.utils.toNano(0.035).toString(10),
       dataType: 'boc',
       data: jettonWalletV1
         .createTransferBody({
           queryId,
           jettonAmount: TonWeb.utils.toNano(values.amount),
-          toAddress:  values.recipient,
-          forwardAmount: TonWeb.utils.toNano(0.035),
+          toAddress: values.recipient,
           forwardPayload: values.comment ? Buffer.from(values.comment.trim()) : undefined,
-          responseAddress: values.response,
         })
         .toBoc()
         .toString('base64'),
