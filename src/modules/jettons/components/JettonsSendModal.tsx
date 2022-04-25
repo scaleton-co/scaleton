@@ -26,6 +26,8 @@ export function JettonsSendModal({ account, jetton, visible, onCancel }: Collect
     () => {
       if (!visible) {
         setLoading(false);
+        setSucceeded(false);
+        setFailed(false);
         form.resetFields();
       }
     },
