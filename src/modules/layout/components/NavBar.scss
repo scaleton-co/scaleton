@@ -40,3 +40,15 @@ span.testnet-badge {
     width: $wallet-button-width;
   }
 }
+
+.header {
+  .links {
+    text-align: right;
+  }
+
+  img.navbar-icon {
+    height: 24px;
+    vertical-align: middle;
+    filter: invert(1);
+  }
+}

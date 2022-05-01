@@ -6,6 +6,7 @@ import { useAppSelector } from '../../../hooks';
 import { truncateAddress } from '../../jettons/utils/truncateAddress';
 import { IS_TESTNET } from '../../ton/network';
 import { ConnectWalletButton } from '../../wallet/components/ConnectWalletButton/ConnectWalletButton';
+import telegramIcon from '../icons/telegram.svg';
 import { NavBarWalletMenu } from './NavBarWalletMenu';
 import ScaletonIcon from './ScaletonIcon.svg';
 import './NavBar.scss';
@@ -25,7 +26,16 @@ export function NavBar() {
           </div>
         </Col>
 
-        <Col flex="auto"></Col>
+        <Col flex="auto" className="links">
+          <Button
+            ghost
+            type="link"
+            href="https://t.me/Scaleton"
+            icon={<img src={telegramIcon} className="navbar-icon" alt="@Scaleton"/>}
+          >
+            {' '}
+          </Button>
+        </Col>
 
         <Col flex="none" className="wallet-button-section">
           {wallet ? (
