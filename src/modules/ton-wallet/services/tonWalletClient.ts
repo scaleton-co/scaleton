@@ -1,4 +1,4 @@
-import { Wallet } from '../types/Wallet';
+import { Wallet } from '../../wallet/services/Wallet';
 
 export const TON_WALLET_EXTENSION_URL = 'https://chrome.google.com/webstore/detail/ton-wallet/nphplpgoakhhjchkkhmiggakijnkhfnd';
 
@@ -28,7 +28,7 @@ export class TonWalletClient {
     return !!this.ton?.isTonWallet;
   }
 
-  ready(): Promise<void> {
+  ready(timeout: number = 5000): Promise<void> {
     return new Promise((resolve, reject) => {
       const timerId = setInterval(
         () => {
@@ -37,22 +37,14 @@ export class TonWalletClient {
             resolve();
           }
         },
-        100,
+        50,
       );
 
       setTimeout(
         () => reject(new Error('TON Wallet cannot be initialized')),
-        5000,
+        timeout,
       );
     });
-  }
-
-  getBalance(): Promise<string | null> {
-    return this.ton!.send('ton_getBalance');
-  }
-
-  requestAccounts(): Promise<string[]> {
-    return this.ton!.send('ton_requestAccounts');
   }
 
   requestWallets(): Promise<Wallet[]> {

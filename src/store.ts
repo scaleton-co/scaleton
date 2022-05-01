@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import jettons from './modules/jettons/store';
-import wallet from './modules/ton-wallet/store';
+import wallet from './modules/wallet/store';
 
 export const store = configureStore({
   reducer: {

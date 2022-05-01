@@ -12,6 +12,9 @@ interface CollectionCreateFormProps {
 }
 
 export function JettonsSendModal({ account, jetton, visible, onCancel }: CollectionCreateFormProps) {
+  const walletAdapterId = useAppSelector(state => state.wallet.adapterId);
+  const walletSession = useAppSelector(state => state.wallet.session);
+
   const jettonContract = useAppSelector(state => state.jettons.contracts.find(contract => contract.address === jetton));
   const jettonWallet = useAppSelector(state => jetton !== null ? state.jettons.balances[account][jetton] : null);
 
@@ -37,6 +40,7 @@ export function JettonsSendModal({ account, jetton, visible, onCancel }: Collect
   const handleSend = useCallback(
     () => {
       if (!jettonWallet) return;
+      if (!walletAdapterId) return;
 
       form
         .validateFields()
@@ -44,6 +48,8 @@ export function JettonsSendModal({ account, jetton, visible, onCancel }: Collect
           setLoading(true);
           await dispatch(
             sendJettons({
+              adapterId: walletAdapterId,
+              session: walletSession,
               jettonWallet: jettonWallet.wallet,
               response: account,
               recipient: values.recipient,
@@ -61,7 +67,7 @@ export function JettonsSendModal({ account, jetton, visible, onCancel }: Collect
           console.log('Validate Failed:', info);
         });
     },
-    [dispatch, jettonWallet, account, form],
+    [dispatch, jettonWallet, account, form, walletAdapterId, walletSession],
   );
 
   const amount = useMemo(

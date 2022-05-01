@@ -12,9 +12,11 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-ga": "^3.3.0",
+    "react-qr-code": "^2.0.7",
     "react-redux": "^8.0.0",
     "react-router-dom": "6",
     "ton": "^9.6.3",
+    "ton-x": "^0.4.0",
     "tonweb": "^0.0.38"
   },
   "scripts": {

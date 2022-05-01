@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import TonWeb from 'tonweb';
-import { tonWalletClient } from '../ton-wallet/services/tonWalletClient';
 import { tonClient } from '../ton/tonClient';
+import { walletService } from '../wallet/services/WalletService';
 import { jettonV1 } from './contracts/JettonV1';
 import { jettonWalletV1 } from './contracts/JettonWalletV1';
 import { jettonCatalog } from './services/JettonCatalog';
@@ -57,7 +57,7 @@ export const refreshBalances = createAsyncThunk(
         const balance = await jettonWalletV1.getBalance(wallet);
 
         result[contract.address] = {
-          wallet,
+          wallet: wallet,
           balance: balance.toString(10),
         };
       } catch (error) {
@@ -80,29 +80,42 @@ export const showTransactions = createAsyncThunk<JettonTransaction[], string>(
   },
 );
 
-export const sendJettons = createAsyncThunk<void, { jettonWallet: string, response?: string, recipient: string, amount: string, comment?: string }>(
+interface SendJettonsInput {
+  adapterId: string;
+  session: unknown;
+  jettonWallet: string;
+  response?: string;
+  recipient: string;
+  amount: string;
+  comment?: string;
+}
+
+export const sendJettons = createAsyncThunk<void, SendJettonsInput>(
   'jettons/send',
-  async (values) => {
+  async (input) => {
     const queryId = Math.round(
       Math.random() * Math.pow(2, 32)
     );
 
-    await tonWalletClient.sendTransaction({
-      to: values.jettonWallet,
-      value: TonWeb.utils.toNano(0.035).toString(10),
-      dataType: 'boc',
-      data: jettonWalletV1
-        .createTransferBody({
-          queryId,
-          jettonAmount: TonWeb.utils.toNano(values.amount),
-          toAddress: values.recipient,
-          forwardPayload: values.comment ? Buffer.from(values.comment.trim()) : undefined,
-        })
-        .toBoc()
-        .toString('base64'),
-    });
+    await walletService.requestTransaction(
+      input.adapterId,
+      input.session,
+      {
+        to: input.jettonWallet,
+        value: TonWeb.utils.toNano(0.035).toString(10),
+        timeout: 2 * 60 * 1000,
+        payload: jettonWalletV1
+          .createTransferBody({
+            queryId,
+            jettonAmount: TonWeb.utils.toNano(input.amount),
+            toAddress: input.recipient,
+            forwardPayload: input.comment ? Buffer.from(input.comment.trim()) : undefined,
+          })
+          .toBoc(),
+      }
+    );
 
-    await waitJettonTransaction(values.jettonWallet, queryId.toString(10));
+    await waitJettonTransaction(input.jettonWallet, queryId.toString(10));
   },
 );
 

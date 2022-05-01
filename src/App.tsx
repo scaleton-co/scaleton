@@ -3,7 +3,8 @@ import React, { useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAppDispatch } from './hooks';
 import { NavBar } from './modules/layout/components/NavBar';
-import { initializeWallet } from './modules/ton-wallet/store';
+import { TonhubConnectModal } from './modules/wallet/components/TonhubConnectModal/TonhubConnectModal';
+import { restoreSession } from './modules/wallet/store';
 import { Jettons } from './pages/Jettons';
 import './App.scss';
 
@@ -14,7 +15,7 @@ function App() {
 
   useEffect(
     () => {
-      dispatch(initializeWallet());
+      dispatch(restoreSession());
     },
     [dispatch],
   );
@@ -34,6 +35,8 @@ function App() {
       <Footer>
         <div className="compressed">Scaleton &copy; 2022</div>
       </Footer>
+
+      <TonhubConnectModal />
     </>
   );
 }

@@ -4,8 +4,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../../hooks';
 import { truncateAddress } from '../../jettons/utils/truncateAddress';
-import { ConnectWalletButton } from '../../ton-wallet/components/ConnectWalletButton';
 import { IS_TESTNET } from '../../ton/network';
+import { ConnectWalletButton } from '../../wallet/components/ConnectWalletButton/ConnectWalletButton';
 import { NavBarWalletMenu } from './NavBarWalletMenu';
 import ScaletonIcon from './ScaletonIcon.svg';
 import './NavBar.scss';
@@ -13,7 +13,7 @@ import './NavBar.scss';
 const { Header } = Layout;
 
 export function NavBar() {
-  const wallet = useAppSelector(state => state.wallet.wallets[0]);
+  const wallet = useAppSelector(state => state.wallet.wallet);
 
   return (
     <Header className="header">
@@ -35,7 +35,7 @@ export function NavBar() {
               </Button>
             </Dropdown>
           ) : (
-            <ConnectWalletButton />
+            <ConnectWalletButton theme="dark" />
           )}
         </Col>
       </Row>

@@ -17,7 +17,7 @@ const { Column } = Table;
 const { Content } = Layout;
 
 export function JettonWalletView() {
-  const currentAccount = useAppSelector(state => state.wallet.wallets[0]?.address);
+  const currentAccount = useAppSelector(state => state.wallet.wallet?.address);
   const { address } = useParams();
 
   const account = address || currentAccount;
@@ -31,7 +31,7 @@ export function JettonWalletView() {
   const allBalances = useAppSelector(state => state.jettons.balances);
   const balancesLoading = useAppSelector(state => state.jettons.balancesLoading);
   const balances = useMemo(
-    () => allBalances[account],
+    () => account ? allBalances[account] : {},
     [account, allBalances],
   );
 
@@ -48,6 +48,7 @@ export function JettonWalletView() {
 
   const handleRefresh = useCallback(
     () => {
+      if (!account) return;
       dispatch(refreshBalances(account));
     },
     [dispatch, account],
