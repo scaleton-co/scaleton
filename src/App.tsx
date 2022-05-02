@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAppDispatch } from './hooks';
 import { NavBar } from './modules/layout/components/NavBar';
+import { Spoiler } from './modules/layout/components/Spoiler/Spoiler';
 import { TonhubConnectModal } from './modules/wallet/components/TonhubConnectModal/TonhubConnectModal';
 import { restoreSession } from './modules/wallet/store';
 import { Jettons } from './pages/Jettons';
@@ -23,6 +24,10 @@ function App() {
   return (
     <>
       <Layout className="main-layout">
+        <Spoiler>
+          Subscribe to <a href="https://t.me/Scaleton">@Scaleton</a> channel to get free SCALE coins! <a href="https://t.me/Scaleton/23">More about airdrop.</a>
+        </Spoiler>
+
         <NavBar/>
 
         <Routes>
