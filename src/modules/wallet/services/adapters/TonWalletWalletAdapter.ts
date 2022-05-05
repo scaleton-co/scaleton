@@ -41,7 +41,7 @@ export class TonWalletWalletAdapter implements WalletAdapter<boolean> {
     await Promise.race([
       tonWalletClient.sendTransaction({
         to: request.to,
-        value: request.to,
+        value: request.value,
         dataType: request.payload ? 'boc' : 'text',
         data: request.payload?.toString('base64') ?? request.text ?? undefined,
         stateInit: request.stateInit?.toString('base64'),

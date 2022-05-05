@@ -1,0 +1,17 @@
+@import '../../../../mixins/mixins.scss';
+
+
+.spoiler {
+  &.ant-layout-header {
+    background-color: #fadb14;
+    line-height: 48px;
+    height: 48px;
+    font-weight: 600;
+  }
+
+  .compressed {
+    @include compressed-layout;
+  }
+}
+
+

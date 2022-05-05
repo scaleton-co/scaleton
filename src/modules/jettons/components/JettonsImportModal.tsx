@@ -62,6 +62,22 @@ export function JettonsImportModal({ visible, onCancel, onImport }: {
     [onImport, dispatch, address, nameFromContent, name, symbolFromContent, symbol],
   );
 
+  const resetForm = useCallback(
+    () => {
+      setAddress('');
+      setName('');
+      setSymbol('');
+    },
+    [setAddress, setName, setSymbol],
+  );
+
+  useEffect(
+    () => {
+      resetForm();
+    },
+    [visible],
+  );
+
   useEffect(
     () => {
       if (!TonWeb.Address.isValid(address)) {

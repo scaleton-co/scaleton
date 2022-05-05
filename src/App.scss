@@ -1,11 +1,4 @@
-/**
-  MIXINS
- */
-
-@mixin compressed-layout {
-  max-width: 1200px;
-  margin: 0 auto;
-}
+@import './mixins/mixins.scss';
 
 /* Layout */
 
@@ -13,22 +6,12 @@ section.ant-layout {
   background: #ffffff;
 }
 
-@media screen and (min-width: 1300px) {
-  section.ant-layout > .ant-layout-header > div.ant-row {
-    padding: 0 50px;
-  }
-
-  header.compressed,
-  main.compressed,
-  footer > div.compressed,
-  header.nft-market > div,
-  section.ant-layout > .ant-layout-header > div.ant-row {
-    @include compressed-layout;
-  }
-
-  footer > div.compressed {
-    padding: 0 50px;
-  }
+header.compressed,
+main.compressed,
+footer > div.compressed,
+header.nft-market > div,
+section.ant-layout > .ant-layout-header > div.ant-row {
+  @include compressed-layout;
 }
 
 section.main-layout {
