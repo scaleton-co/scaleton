@@ -15,7 +15,6 @@ export function JettonsTransactionsModal({ account, jettonWallet, visible, onClo
 }) {
   const isLoading = useAppSelector(state => !!(jettonWallet && state.jettons.history[jettonWallet]?.isLoading) ?? true);
   const transactions = useAppSelector(state => (jettonWallet && state.jettons.history[jettonWallet]?.transactions) || []);
-  const jettons = useAppSelector(state => state.jettons.contracts);
   const allBalances = useAppSelector(state => state.jettons.balances);
 
   const symbol = useMemo(
@@ -24,15 +23,16 @@ export function JettonsTransactionsModal({ account, jettonWallet, visible, onClo
 
       if (!accountBalances) return null;
 
-      for (const jettonContract in accountBalances) {
-        if (accountBalances[jettonContract].wallet === jettonWallet) {
-          return jettons.find(jetton => jetton.address === jettonContract)?.symbol ?? null;
-        }
-      }
+      // TODO:
+      // for (const jettonContract in accountBalances) {
+      //   if (accountBalances[jettonContract].wallet === jettonWallet) {
+      //     return jettons.find(jetton => jetton.address === jettonContract)?.symbol ?? null;
+      //   }
+      // }
 
       return null;
     },
-    [allBalances, account, jettonWallet, jettons],
+    [allBalances, account],
   );
 
   return (
@@ -47,16 +47,17 @@ export function JettonsTransactionsModal({ account, jettonWallet, visible, onClo
         </Button>,
       ]}
       onCancel={onClose}
+      destroyOnClose
     >
       <Table
         size="small"
         loading={isLoading}
         dataSource={transactions.map((transaction, transactionIndex) => ({
           key: transactionIndex,
-          time: timeAgo.format(new Date(transaction.time * 1000)),
+          time: timeAgo.format(new Date(transaction.time)),
           operation: transaction.operation,
-          from: transaction.operation === JettonOperation.TRANSFER ? account : transaction.from,
-          to: transaction.operation === JettonOperation.TRANSFER ? transaction.destination : account,
+          from: transaction.operation === 'out' ? account : transaction.from,
+          to: transaction.operation === 'out' ? transaction.to : account,
           amount: transaction.amount,
           comment: transaction.comment,
         }))}
@@ -80,7 +81,7 @@ export function JettonsTransactionsModal({ account, jettonWallet, visible, onClo
           title="From"
           dataIndex="from"
           key="from"
-          render={(address: string) => <a href={`/address/${address}`}><Address value={address}/></a>}
+          render={(address: string) => <a href={`/${address}/assets`}><Address value={address}/></a>}
         />
 
         <Table.Column
@@ -96,7 +97,7 @@ export function JettonsTransactionsModal({ account, jettonWallet, visible, onClo
           title="To"
           dataIndex="to"
           key="to"
-          render={(address: string) => <a href={`/address/${address}`}><Address value={address}/></a>}
+          render={(address: string) => <a href={`/${address}/assets`}><Address value={address}/></a>}
         />
 
         <Table.Column

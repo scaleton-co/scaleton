@@ -1,5 +1,5 @@
-import MAINNET_JETTONS from '../../../assets/mainnet.yaml';
-import TESTNET_JETTONS from '../../../assets/testnet.yaml';
+import MAINNET_JETTONS from '../../../static/assets/mainnet.yaml';
+import TESTNET_JETTONS from '../../../static/assets/testnet.yaml';
 import { IS_TESTNET } from '../../ton/network';
 import type { Jetton } from '../types/Jetton';
 
@@ -17,8 +17,6 @@ class JettonCatalog {
   }
 
   importJetton(address: string, name: string, symbol?: string) {
-    console.log(address, name, symbol);
-
     const jetton: Jetton = {
       address,
       name,

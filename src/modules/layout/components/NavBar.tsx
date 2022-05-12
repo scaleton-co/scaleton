@@ -1,5 +1,5 @@
 import { WalletOutlined } from '@ant-design/icons';
-import { Button, Col, Dropdown, Layout, Row } from 'antd';
+import { Button, Col, Dropdown, Layout, Menu, Row, Tag, Tooltip } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../../hooks';
@@ -24,6 +24,43 @@ export function NavBar() {
             <Link to="/"><img src={ScaletonIcon} alt="Scaleton"/> Scaleton {IS_TESTNET && (
               <span className="testnet-badge">testnet</span>)}</Link>
           </div>
+        </Col>
+
+        <Col flex="auto">
+          <Menu
+            theme="dark"
+            mode="horizontal"
+            style={{
+              background: '#002457',
+            }}
+            selectedKeys={[]}
+            items={[
+              {
+                key: 'assets',
+                label: (
+                  <Link to="/assets">My Wallet</Link>
+                ),
+              },
+              IS_TESTNET ? ({
+                key: 'dapps.dex.swap',
+                label: (
+                  <Link to="/dapps/dex.swap">
+                    Trade <Tag color="#f50" style={{ marginLeft: 7 }}>NEW</Tag>
+                  </Link>
+                ),
+              }) : ({
+                key: 'dapps.dex.swap',
+                label: (
+                  <Tooltip placement="bottomRight" title="Currently, DEX is available only in testnet.">
+                    Trade <Tag color="#f50" style={{ marginLeft: 7 }}>NEW</Tag>
+                  </Tooltip>
+                ),
+                style: {
+                  cursor: 'not-allowed',
+                },
+              }),
+            ]}
+          />
         </Col>
 
         <Col flex="auto" className="links">

@@ -1,6 +1,5 @@
 import { tonClient } from '../../ton/tonClient';
 import { RawTransaction } from '../../ton/types/RawTransaction';
-import { parseTransaction } from './parseTransaction';
 
 export function waitJettonTransaction(
   jettonWallet: string,
@@ -19,13 +18,14 @@ export function waitJettonTransaction(
         const transactions: RawTransaction[] = await tonClient.getTransactions(jettonWallet);
 
         for (const transaction of transactions) {
-          const tx = parseTransaction(transaction);
+          // TODO: Migrate to JettonWalletContract
+          // const tx = parseTransaction(transaction);
 
-          if (tx?.queryId === queryId) {
-            clearInterval(timerId);
-            resolve();
-            break;
-          }
+          // if (tx?.queryId === queryId) {
+          //   clearInterval(timerId);
+          //   resolve();
+          //   break;
+          // }
         }
       },
       checkInterval,

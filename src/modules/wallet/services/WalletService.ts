@@ -23,6 +23,11 @@ export class WalletService {
     return adapter.awaitReadiness(session);
   }
 
+  async getWallet<S>(adapterId: string, session: S): Promise<Wallet> {
+    const adapter = this.adapters.get(adapterId) as WalletAdapter<S>;
+    return adapter.getWallet(session);
+  }
+
   async requestTransaction<S>(adapterId: string, session: S, request: TransactionRequest): Promise<void> {
     const adapter = this.adapters.get(adapterId) as WalletAdapter<S>;
     await adapter.requestTransaction(session, request);

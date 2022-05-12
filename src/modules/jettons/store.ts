@@ -1,121 +1,143 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import TonWeb from 'tonweb';
-import { tonClient } from '../ton/tonClient';
-import { walletService } from '../wallet/services/WalletService';
-import { jettonV1 } from './contracts/JettonV1';
-import { jettonWalletV1 } from './contracts/JettonWalletV1';
+import { Address, toNano } from 'ton';
+import { assetCatalog } from '../assets/services';
 import { jettonCatalog } from './services/JettonCatalog';
-import { parseTransaction } from './utils/parseTransaction';
-import { waitJettonTransaction } from './utils/waitJettonTransaction';
+import type { RootState } from '../../store';
+import type { AssetRef } from '../assets/types/AssetRef';
 import type { Jetton } from './types/Jetton';
-import type { JettonTransaction } from './types/JettonTransaction';
 
-type JettonWallet = {
-  [jettonContract: string]: {
-    wallet: string;
+type AssetBalances = {
+  [assetId: string]: {
     balance: string;
   };
 }
 
 interface JettonsState {
+  assets: AssetRef[];
   contracts: Jetton[];
   balancesLoading: boolean;
   balances: {
-    [owner: string]: JettonWallet;
+    [owner: string]: AssetBalances;
   };
 
   history: {
-    [jettonWallet: string]: {
-      transactions: JettonTransaction[];
+    [assetId: string]: {
+      transactions: {
+        time: string;
+        operation: 'in' | 'out' | 'mint' | 'burn';
+        from: string | null;
+        to: string | null;
+        amount: string;
+        comment: string | null;
+      }[];
       isLoading: boolean;
     };
   };
 }
 
 const initialState: JettonsState = {
+  assets: assetCatalog.getAll(),
   contracts: jettonCatalog.contracts,
   balancesLoading: false,
   balances: {},
   history: {},
 };
 
-export const importJetton = createAsyncThunk<void, Jetton>(
+export const importJetton = createAsyncThunk<AssetRef[], Jetton>(
   'jettons/import',
   (jetton: Jetton) => {
-    jettonCatalog.importJetton(jetton.address, jetton.name, jetton.symbol);
+    assetCatalog.importJetton({
+      name: jetton.name,
+      symbol: jetton.symbol ?? jetton.name,
+      contractAddress: jetton.address,
+    });
+
+    return assetCatalog.getAll();
+  },
+);
+
+export const hideAsset = createAsyncThunk<AssetRef[], string>(
+  'jettons/hideAsset',
+  async (assetId: string) => {
+    assetCatalog.removeAsset(assetId);
+
+    return assetCatalog.getAll();
   },
 );
 
 export const refreshBalances = createAsyncThunk(
   'jettons/refreshBalances',
   async (owner: string) => {
-    const result: JettonWallet = {};
+    const result: AssetBalances = {};
 
-    for (const contract of jettonCatalog.contracts) {
-      try {
-        const wallet = await jettonV1.getWalletAddress(contract.address, owner);
-        const balance = await jettonWalletV1.getBalance(wallet);
+    const ownerAddress = Address.parse(owner);
+    const assets = assetCatalog.getAll();
 
-        result[contract.address] = {
-          wallet: wallet,
-          balance: balance.toString(10),
-        };
-      } catch (error) {
-        console.error('Cannot fetch balance.', error);
-      }
-    }
+    await Promise.all(
+      assets.map(async (asset) => {
+        try {
+          const balance = await assetCatalog.getBalance(ownerAddress, asset.id);
+
+          result[asset.id] = {
+            // wallet: '', // TODO <--
+            balance: balance.toString(),
+          };
+        } catch (e) {
+          console.error(e);
+        }
+      }),
+    );
 
     return result;
   },
 );
 
-export const showTransactions = createAsyncThunk<JettonTransaction[], string>(
+// export const showTransactions = createAsyncThunk<JettonTransaction[], string>(
+export const showTransactions = createAsyncThunk(
   'jettons/showTransactions',
-  async (jettonWallet: string) => {
-    const transactions = await tonClient.getTransactions(jettonWallet);
+  async (assetId: string, thunkAPI) => {
+    const state = thunkAPI.getState() as RootState;
+    const ownerAddress = Address.parse(state.wallet.wallet!.address);
+    const transactions = await assetCatalog.getTransactions(ownerAddress, assetId);
 
-    return transactions
-      .map(parseTransaction)
-      .filter((transaction: any) => transaction !== null);
+    return transactions.map(transaction => ({
+      time: transaction.time.toISOString(),
+      operation: transaction.operation,
+      from: transaction.from?.toFriendly() ?? null,
+      to: transaction.to?.toFriendly() ?? null,
+      amount: transaction.amount.toString(),
+      comment: transaction.comment,
+    }));
   },
 );
 
 interface SendJettonsInput {
   adapterId: string;
   session: unknown;
-  jettonWallet: string;
+  assetId: string;
   response?: string;
   recipient: string;
   amount: string;
   comment?: string;
 }
 
-export const sendJettons = createAsyncThunk<void, SendJettonsInput>(
+export const sendAssets = createAsyncThunk<void, SendJettonsInput>(
   'jettons/send',
   async (input) => {
-    const queryId = Math.round(
-      Math.random() * Math.pow(2, 32)
-    );
-
-    await walletService.requestTransaction(
+    await assetCatalog.requestTransaction(
       input.adapterId,
       input.session,
+      input.assetId,
       {
-        to: input.jettonWallet,
-        value: TonWeb.utils.toNano(0.035).toString(10),
+        to: input.recipient,
+        value: toNano(input.amount).toString(),
         timeout: 2 * 60 * 1000,
-        payload: jettonWalletV1
-          .createTransferBody({
-            queryId,
-            jettonAmount: TonWeb.utils.toNano(input.amount),
-            toAddress: input.recipient,
-            forwardPayload: input.comment ? Buffer.from(input.comment.trim()) : undefined,
-          })
-          .toBoc(),
-      }
+        text: input.comment?.trim(),
+      },
     );
 
-    await waitJettonTransaction(input.jettonWallet, queryId.toString(10));
+    // TODO: Extract it to a separate action.
+    // await waitJettonTransaction(input.jettonWallet, queryId.toString(10));
   },
 );
 
@@ -164,6 +186,11 @@ const store = createSlice({
 
     builder.addCase(importJetton.fulfilled, (state, action) => {
       state.contracts.push(action.meta.arg);
+      state.assets = action.payload;
+    });
+
+    builder.addCase(hideAsset.fulfilled, (state, action) => {
+      state.assets = action.payload;
     });
   }
 });

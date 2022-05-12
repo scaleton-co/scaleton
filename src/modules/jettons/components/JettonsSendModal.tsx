@@ -2,21 +2,23 @@ import { Modal, Form, Input, Button, Result } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import TonWeb from 'tonweb';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { sendJettons } from '../store';
+import { assetCatalog } from '../../assets/services';
+import { sendAssets } from '../store';
 
 interface CollectionCreateFormProps {
   account: string;
-  jetton: string | null;
+  assetId: string | null;
   visible: boolean;
   onCancel: () => void;
 }
 
-export function JettonsSendModal({ account, jetton, visible, onCancel }: CollectionCreateFormProps) {
+export function JettonsSendModal({ account, assetId, visible, onCancel }: CollectionCreateFormProps) {
   const walletAdapterId = useAppSelector(state => state.wallet.adapterId);
   const walletSession = useAppSelector(state => state.wallet.session);
 
-  const jettonContract = useAppSelector(state => state.jettons.contracts.find(contract => contract.address === jetton));
-  const jettonWallet = useAppSelector(state => jetton !== null ? state.jettons.balances[account][jetton] : null);
+  const asset = useAppSelector(() => assetId ? assetCatalog.getById(assetId) : null);
+  // const jettonContract = useAppSelector(state => state.jettons.contracts.find(contract => contract.address === assetId));
+  const jettonWallet = useAppSelector(state => assetId !== null ? state.jettons.balances[account][assetId] : null);
 
   const [form] = Form.useForm();
   const [isLoading, setLoading] = useState(false);
@@ -41,16 +43,17 @@ export function JettonsSendModal({ account, jetton, visible, onCancel }: Collect
     () => {
       if (!jettonWallet) return;
       if (!walletAdapterId) return;
+      if (!assetId) return;
 
       form
         .validateFields()
         .then(async values => {
           setLoading(true);
           await dispatch(
-            sendJettons({
+            sendAssets({
               adapterId: walletAdapterId,
               session: walletSession,
-              jettonWallet: jettonWallet.wallet,
+              assetId,
               response: account,
               recipient: values.recipient,
               amount: values.amount,
@@ -64,10 +67,9 @@ export function JettonsSendModal({ account, jetton, visible, onCancel }: Collect
         .catch(info => {
           setLoading(false);
           setFailed(true);
-          console.log('Validate Failed:', info);
         });
     },
-    [dispatch, jettonWallet, account, form, walletAdapterId, walletSession],
+    [dispatch, jettonWallet, account, form, walletAdapterId, walletSession, assetId],
   );
 
   const amount = useMemo(
@@ -76,25 +78,26 @@ export function JettonsSendModal({ account, jetton, visible, onCancel }: Collect
     [form, isFailed, isSucceeded],
   );
 
-  if (!jettonContract) {
+  if (!asset) {
     return <></>;
   }
 
   return (
     <Modal
       visible={visible}
-      title={`Send ${jettonContract.symbol}`}
+      title={`Send ${asset.symbol}`}
       okText="Send"
       cancelText="Cancel"
       onCancel={onCancel}
       confirmLoading={isLoading}
       onOk={handleSend}
+      destroyOnClose
       footer={(isSucceeded || isFailed) ? null : undefined}
     >
       {isSucceeded && (
         <Result
           status="success"
-          title={`${amount} ${jettonContract.symbol} successfully sent!`}
+          title={`${amount} ${asset.symbol} successfully sent!`}
           extra={[
             <Button key="close" onClick={onCancel}>Close</Button>,
           ]}
@@ -149,7 +152,12 @@ export function JettonsSendModal({ account, jetton, visible, onCancel }: Collect
             label="Amount"
             rules={[{ required: true, message: 'Please input the amount of tokens!' }]}
           >
-            <Input type="number" defaultValue={0} addonAfter={jettonContract.symbol} disabled={isLoading}/>
+            <Input
+              type="number"
+              defaultValue={0}
+              addonAfter={asset.symbol}
+              disabled={isLoading}
+            />
           </Form.Item>
 
           <Form.Item

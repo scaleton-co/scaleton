@@ -1,9 +1,11 @@
 @import './mixins/mixins.scss';
 
+$background-color: #ffffff;
+
 /* Layout */
 
 section.ant-layout {
-  background: #ffffff;
+  background-color: $background-color;
 }
 
 header.compressed,
@@ -15,7 +17,7 @@ section.ant-layout > .ant-layout-header > div.ant-row {
 }
 
 section.main-layout {
-  background: #ffffff;
+  background-color: $background-color;
   min-height: 100%;
   height: 100%;
   padding-bottom: 120px;
@@ -24,4 +26,21 @@ section.main-layout {
 
 footer.ant-layout-footer {
   margin-top: 50px;
+  background: #002457;
+  color: #ffffff;
+
+  .links-section {
+    text-align: right;
+
+    a {
+      color: rgba(#ffffff, 0.75);
+      &:hover {
+        color: #ffffff;
+      }
+
+      & + a {
+        margin-left: 12px;
+      }
+    }
+  }
 }

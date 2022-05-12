@@ -1,5 +1,5 @@
 span.ant-page-header-heading-title {
-  font-size: 16pt;
+  font-size: 14pt;
 }
 
 .clickable-address {
@@ -14,5 +14,11 @@ span.ant-page-header-heading-title {
 
   &> .ant-page-header {
     padding: 16px 0;
+
+    .my-account-badge {
+      margin-left: 8px;
+      font-size: 12pt;
+      color: #888;
+    }
   }
 }

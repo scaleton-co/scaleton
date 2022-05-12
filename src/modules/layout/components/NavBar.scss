@@ -42,6 +42,10 @@ span.testnet-badge {
 }
 
 .header {
+  &.ant-layout-header {
+    background: #002457;
+  }
+
   .links {
     text-align: right;
   }

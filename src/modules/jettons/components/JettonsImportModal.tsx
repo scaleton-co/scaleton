@@ -75,7 +75,7 @@ export function JettonsImportModal({ visible, onCancel, onImport }: {
     () => {
       resetForm();
     },
-    [visible],
+    [visible, resetForm],
   );
 
   useEffect(
@@ -119,6 +119,7 @@ export function JettonsImportModal({ visible, onCancel, onImport }: {
       }}
       onCancel={onCancel}
       onOk={handleOk}
+      destroyOnClose
     >
       <Form layout="vertical">
         <Form.Item name="jettonAddress" label="Contract Address">

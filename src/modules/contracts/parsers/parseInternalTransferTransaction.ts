@@ -1,7 +1,6 @@
-import { Slice } from 'ton';
-import { RawTransaction } from '../../ton/types/RawTransaction';
-import { JettonOperation } from '../enums/JettonOperation';
-import { JettonIncomeTransaction } from '../types/JettonIncomeTransaction';
+import { JettonOperation } from '../../jettons/enums/JettonOperation';
+import type { JettonIncomeTransaction } from '../../jettons/types/JettonIncomeTransaction';
+import type { Slice, TonTransaction } from 'ton';
 
 /**
   internal_transfer  query_id:uint64 amount:(VarUInteger 16) from:MsgAddress
@@ -11,7 +10,7 @@ import { JettonIncomeTransaction } from '../types/JettonIncomeTransaction';
     = InternalMsgBody;
 */
 
-export function parseInternalTransferTransaction(bodySlice: Slice, transaction: RawTransaction): JettonIncomeTransaction {
+export function parseInternalTransferTransaction(bodySlice: Slice, transaction: TonTransaction): JettonIncomeTransaction {
   const queryId = bodySlice.readUint(64);
   const amount = bodySlice.readCoins();
   const from = bodySlice.readAddress();
@@ -19,13 +18,13 @@ export function parseInternalTransferTransaction(bodySlice: Slice, transaction: 
   bodySlice.readAddress(); // response_address
   bodySlice.readCoins(); // forward_ton_amount
 
-  const comment = (!bodySlice.readBit() && bodySlice.remaining && (bodySlice.remaining % 8) === 0)
+  const comment = (bodySlice.remaining && !bodySlice.readBit() && bodySlice.remaining && (bodySlice.remaining % 8) === 0)
     ? bodySlice.readRemainingBytes().toString()
     : '';
 
   return {
     operation: JettonOperation.INTERNAL_TRANSFER,
-    time: transaction.utime,
+    time: transaction.time,
     queryId: queryId.toString(10),
     amount: amount.toString(10),
     from: from?.toFriendly() ?? null,

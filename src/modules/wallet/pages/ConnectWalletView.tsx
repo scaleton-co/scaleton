@@ -1,8 +1,8 @@
 import { WalletOutlined } from '@ant-design/icons';
 import { Result } from 'antd';
 import React from 'react';
-import { TON_WALLET_EXTENSION_URL } from '../../../ton-wallet/services/tonWalletClient';
-import { ConnectWalletButton } from '../../../wallet/components/ConnectWalletButton/ConnectWalletButton';
+import { TON_WALLET_EXTENSION_URL } from '../../ton-wallet/services/tonWalletClient';
+import { ConnectWalletButton } from '../components/ConnectWalletButton/ConnectWalletButton';
 import './ConnectWalletView.scss';
 
 export function ConnectWalletView() {
@@ -18,7 +18,7 @@ export function ConnectWalletView() {
           </>
         )}
         extra={
-          <ConnectWalletButton className="connect-wallet-button" size="large" />
+          <ConnectWalletButton theme="dark" className="connect-wallet-button" size="large" />
         }
       />
     </div>

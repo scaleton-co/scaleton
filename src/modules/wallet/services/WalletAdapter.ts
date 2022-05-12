@@ -6,5 +6,6 @@ export interface WalletAdapter<S> {
   isAvailable(): boolean;
   createSession(): Promise<S>;
   awaitReadiness(session: S): Promise<Wallet>;
+  getWallet(session: S): Promise<Wallet>;
   requestTransaction(session: S, request: TransactionRequest): Promise<void>;
 }

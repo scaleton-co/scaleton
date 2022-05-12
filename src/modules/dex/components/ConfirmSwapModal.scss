@@ -1,0 +1,52 @@
+$primary-color: #1890ff;
+$success-color: #52c41a;
+$failure-color: #ff7875;
+
+.confirm-swap-modal {
+  div.swap-status-icon {
+    .anticon {
+      color: $primary-color !important;
+      font-size: 96px;
+
+      &.anticon-sync {
+        animation-duration: 2s;
+      }
+
+      &.anticon-check-circle {
+        color: $success-color !important;
+      }
+
+      &.anticon-stop {
+        color: $failure-color !important;
+      }
+    }
+  }
+
+  .pulsing-wallet-icon {
+    box-shadow: 0 0 0 0 $primary-color;
+    border-radius: 6px;
+    transform: scale(1);
+    animation: wallet-pulse 2s infinite;
+  }
+
+  @keyframes wallet-pulse {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba($primary-color, 0.7);
+    }
+
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px rgba($primary-color, 0);
+    }
+
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba($primary-color, 0);
+    }
+  }
+
+  .ant-timeline-item:last-of-type {
+    padding-bottom: 0;
+  }
+}

@@ -1,33 +1,33 @@
-import { LinkOutlined } from '@ant-design/icons';
-import { Space, Table, Layout, Button, Skeleton, PageHeader, message } from 'antd';
+import { CopyOutlined, LinkOutlined } from '@ant-design/icons';
+import { Space, Table, Layout, Button, Skeleton, PageHeader, message, Popconfirm } from 'antd';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
+import { ConnectWalletView } from '../../wallet/pages/ConnectWalletView';
 import { Address } from '../components/Address/Address';
-import { ConnectWalletView } from '../components/ConnectWalletView/ConnectWalletView';
 import { JettonsImportModal } from '../components/JettonsImportModal';
 import { JettonsSendModal } from '../components/JettonsSendModal';
 import { JettonsTransactionsModal } from '../components/JettonsTransactionsModal';
-import { refreshBalances, showTransactions } from '../store';
+import { hideAsset, refreshBalances, showTransactions } from '../store';
 import { presentBalance } from '../utils/presentBalance';
-import type { Jetton } from '../types/Jetton';
+import type { AssetRef } from '../../assets/types/AssetRef';
 import './JettonWalletView.scss';
 
 const { Column } = Table;
 const { Content } = Layout;
 
 export function JettonWalletView() {
-  const currentAccount = useAppSelector(state => state.wallet.wallet?.address);
-  const { address } = useParams();
+  const walletAddress = useAppSelector(state => state.wallet.wallet?.address);
+  const { address: account } = useParams();
 
-  const account = address || currentAccount;
-  const isMyAccount = !address;
+  const isMyAccount = walletAddress === account;
 
   const [isSendJettonActive, setSendJettonActive] = useState(false);
   const [sendJettonContract, setSendJettonContract] = useState<string | null>(null);
   const [isImportJettonActive, setImportJettonActive] = useState(false);
 
   const jettons = useAppSelector(state => state.jettons.contracts);
+  const assets = useAppSelector(state => state.jettons.assets);
   const allBalances = useAppSelector(state => state.jettons.balances);
   const balancesLoading = useAppSelector(state => state.jettons.balancesLoading);
   const balances = useMemo(
@@ -54,10 +54,10 @@ export function JettonWalletView() {
     [dispatch, account],
   );
 
-  const showSendJetton = useCallback(
-    (token: Jetton) => {
+  const showSendAsset = useCallback(
+    (assetId: string) => {
       setSendJettonActive(true);
-      setSendJettonContract(token.address);
+      setSendJettonContract(assetId);
     },
     [setSendJettonActive],
   );
@@ -65,15 +65,13 @@ export function JettonWalletView() {
   const [isJettonTransactionActive, setJettonTransactionsActive] = useState(false);
   const [jettonTransactionWallet, setJettonTransactionsWallet] = useState<string | null>(null);
 
-  const showJettonTransactions = useCallback(
-    (jetton: Jetton) => {
-      const jettonWallet = balances[jetton.address];
-
-      dispatch(showTransactions(jettonWallet.wallet));
+  const showAssetTransactions = useCallback(
+    (assetId: string) => {
+      dispatch(showTransactions(assetId));
       setJettonTransactionsActive(true);
-      setJettonTransactionsWallet(jettonWallet.wallet);
+      setJettonTransactionsWallet(assetId);
     },
-    [dispatch, setJettonTransactionsActive, balances],
+    [dispatch, setJettonTransactionsActive],
   );
 
   const closeJettonTransactions = useCallback(
@@ -108,8 +106,16 @@ export function JettonWalletView() {
     [setImportJettonActive, dispatch, account],
   );
 
+  const handleHideAsset = useCallback(
+    (assetId: string) => {
+      dispatch(hideAsset(assetId));
+    },
+    [dispatch],
+  );
+
   const handleAddressClick = useCallback(
-    () => {
+    (e) => {
+      e.preventDefault();
       if (!account) return;
       navigator.clipboard.writeText(account);
       message.info('Address saved to clipboard.');
@@ -123,17 +129,21 @@ export function JettonWalletView() {
     );
   }
 
-  if (address && address === currentAccount) {
-    return (
-      <Navigate to="/assets" />
-    );
-  }
-
   return (
     <Content className="jetton-wallet-view compressed">
       <PageHeader
         ghost={true}
-        title={isMyAccount ? 'My Wallet' : <span onClick={handleAddressClick} className="clickable-address"><Address value={account}/></span>}
+        title={(
+          <>
+            <Address value={account}/>
+            {/*{isMyAccount ? 'My Wallet' : }*/}
+            {/*{isMyAccount ? 'My Wallet' : <Address value={account}/>}*/}
+            <a href="#" onClick={handleAddressClick} style={{ marginLeft: 6, fontSize: '12pt', color: 'rgba(0, 0, 0, 0.85)' }}><CopyOutlined /></a>
+            {isMyAccount && (
+              <span className="my-account-badge">(it's you)</span>
+            )}
+          </>
+        )}
         extra={[
           <Button key="import" type="link" onClick={openImportJetton}>
             Import Jetton
@@ -150,18 +160,18 @@ export function JettonWalletView() {
 
       {balances && (
         <Table
-          dataSource={jettons}
+          dataSource={assets}
           loading={balancesLoading}
-          rowKey={(jetton: Jetton) => jetton.address}
+          rowKey={(asset: AssetRef) => asset.id}
           pagination={false}
         >
           <Column
             title="Name"
             dataIndex="name"
             key="age"
-            render={(name: string, jetton: Jetton) => {
+            render={(name: string, asset: AssetRef) => {
               return (
-                <>{name} {jetton.url && (<a href={jetton.url} target="_blank" rel="noreferrer"><LinkOutlined/></a>)}</>
+                <>{name} {asset.url && (<a href={asset.url} target="_blank" rel="noreferrer"><LinkOutlined/></a>)}</>
               );
             }}
           />
@@ -169,8 +179,8 @@ export function JettonWalletView() {
           <Column
             title="Balance"
             key="balance"
-            render={(_, jetton: Jetton) => (
-              <>{presentBalance(balances[jetton.address]?.balance ?? '0')} {jetton.symbol}</>
+            render={(_, asset: AssetRef) => (
+              <>{presentBalance(balances[asset.id]?.balance ?? '0')} {asset.symbol}</>
             )}
           />
 
@@ -178,12 +188,24 @@ export function JettonWalletView() {
             width={300}
             title="Action"
             key="action"
-            render={(_, jetton: Jetton, index) => (
+            render={(_, asset: AssetRef, index) => (
               <Space size="middle" key={index}>
                 {isMyAccount && (
-                  <Button type="link" onClick={() => showSendJetton(jetton)}>Send</Button>
+                  <Button type="link" onClick={() => showSendAsset(asset.id)}>Send</Button>
                 )}
-                <Button type="link" onClick={() => showJettonTransactions(jetton)}>Transactions</Button>
+
+                <Button type="link" onClick={() => showAssetTransactions(asset.id)}>Transactions</Button>
+
+                {asset.isCustom && (
+                  <Popconfirm
+                    title="Are you sure？"
+                    okText="Yes"
+                    cancelText="No"
+                    onConfirm={() => handleHideAsset(asset.id)}
+                  >
+                    <a href="#">Hide</a>
+                  </Popconfirm>
+                )}
               </Space>
             )}
           />
@@ -198,7 +220,7 @@ export function JettonWalletView() {
 
       <JettonsSendModal
         account={account}
-        jetton={sendJettonContract}
+        assetId={sendJettonContract}
         visible={isSendJettonActive}
         onCancel={() => {
           setSendJettonActive(false);

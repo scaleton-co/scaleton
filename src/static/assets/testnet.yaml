@@ -1,0 +1,13 @@
+---
+- id: ton
+  type: native
+  name: The Open Network
+  symbol: TON
+  url: https://ton.org
+
+- id: jetton:0:19b761b6de3a28afda7c8ecabf9b5e2251ab730b166db8641fbde5ce45fd5235
+  type: jetton
+  name: Scaleton
+  symbol: SCALE
+  contractAddress: EQAZt2G23joor9p8jsq_m14iUatzCxZtuGQfveXORf1SNZ_7
+  url: https://scaleton.co

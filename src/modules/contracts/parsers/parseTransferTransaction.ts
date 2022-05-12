@@ -1,7 +1,6 @@
-import { Slice } from 'ton';
-import { JettonOperation } from '../enums/JettonOperation';
-import type { RawTransaction } from '../../ton/types/RawTransaction';
-import type { JettonOutcomeTransaction } from '../types/JettonOutcomeTransaction';
+import { JettonOperation } from '../../jettons/enums/JettonOperation';
+import type { JettonOutcomeTransaction } from '../../jettons/types/JettonOutcomeTransaction';
+import type { Slice, TonTransaction } from 'ton';
 
 /**
   transfer query_id:uint64 amount:(VarUInteger 16) destination:MsgAddress
@@ -10,7 +9,7 @@ import type { JettonOutcomeTransaction } from '../types/JettonOutcomeTransaction
     = InternalMsgBody;
   */
 
-export function parseTransferTransaction(bodySlice: Slice, transaction: RawTransaction): JettonOutcomeTransaction {
+export function parseTransferTransaction(bodySlice: Slice, transaction: TonTransaction): JettonOutcomeTransaction {
   const queryId = bodySlice.readUint(64);
   const amount = bodySlice.readCoins();
   const destination = bodySlice.readAddress();
@@ -25,7 +24,7 @@ export function parseTransferTransaction(bodySlice: Slice, transaction: RawTrans
 
   return {
     operation: JettonOperation.TRANSFER,
-    time: transaction.utime,
+    time: transaction.time,
     queryId: queryId.toString(10),
     amount: amount.toString(10),
     destination: destination?.toFriendly() ?? null,
