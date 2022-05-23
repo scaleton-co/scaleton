@@ -10,7 +10,7 @@ export function ConnectWalletView() {
     <div className="connect-wallet-view">
       <Result
         icon={<WalletOutlined/>}
-        title="Connect your wallet to see your jettons!"
+        title="Connect your wallet to see your assets!"
         subTitle={(
           <>
             It requires <a target="_blank" rel="noreferrer" href={TON_WALLET_EXTENSION_URL}>TON Wallet</a> extension

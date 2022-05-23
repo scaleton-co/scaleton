@@ -11,6 +11,7 @@
     "buffer": "^6.0.3",
     "javascript-time-ago": "^2.3.13",
     "react": "^18.0.0",
+    "react-device-detect": "^2.2.2",
     "react-dom": "^18.0.0",
     "react-ga": "^3.3.0",
     "react-qr-code": "^2.0.7",
@@ -21,6 +22,7 @@
     "tonweb": "^0.0.38"
   },
   "scripts": {
+    "start:full": "netlify dev",
     "start": "react-app-rewired start",
     "build": "GENERATE_SOURCEMAP=false react-app-rewired build",
     "test": "react-app-rewired test",
@@ -37,26 +39,6 @@
       "quotes": [
         "error",
         "single"
-      ],
-      "import/order": [
-        "error",
-        {
-          "alphabetize": {
-            "order": "asc"
-          },
-          "groups": [
-            "builtin",
-            "external",
-            "internal",
-            "parent",
-            "sibling",
-            "index",
-            "object",
-            "type"
-          ],
-          "newlines-between": "never",
-          "warnOnUnassignedImports": false
-        }
       ]
     }
   },
@@ -73,6 +55,7 @@
     ]
   },
   "devDependencies": {
+    "@netlify/functions": "^1.0.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
@@ -83,6 +66,7 @@
     "@types/node": "^16.11.26",
     "@types/react": "^17.0.44",
     "@types/react-dom": "^18.0.1",
+    "netlify-cli": "^10.3.1",
     "react-app-rewired": "^2.2.1",
     "react-scripts": "5.0.0",
     "sass": "^1.50.0",

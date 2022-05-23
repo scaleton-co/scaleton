@@ -33,7 +33,7 @@ function App() {
           <Route path="/connect" element={<Connect/>}/>
           <Route path="/dapps/dex.swap" element={<Trade/>}/>
           <Route path="/address/:address" element={<Jettons/>}/>
-          <Route path="/:address/assets" element={<Jettons/>}/>
+          <Route path="/:address/:module" element={<Jettons/>}/>
         </Routes>
       </Layout>
 

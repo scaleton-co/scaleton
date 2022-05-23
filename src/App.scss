@@ -8,12 +8,72 @@ section.ant-layout {
   background-color: $background-color;
 }
 
-header.compressed,
 main.compressed,
 footer > div.compressed,
-header.nft-market > div,
 section.ant-layout > .ant-layout-header > div.ant-row {
   @include compressed-layout;
+}
+
+@media screen and (max-width: 410px) {
+  .ant-layout-header .ant-menu-horizontal .ant-menu-item {
+    .ant-tag {
+      display: none;
+    }
+  }
+}
+
+@media screen and (max-width: 780px) {
+  .ant-layout-header {
+    padding: 0 16px !important;
+
+    .navbar-logo {
+      padding-right: 10px;
+
+      .logo-text {
+        display: none;
+      }
+    }
+
+    .ant-menu-horizontal .ant-menu-item {
+      padding: 0 10px !important;
+    }
+
+    .ant-col.links {
+      display: none;
+    }
+
+    .wallet-button-section {
+      &> button {
+        width: 50px;
+
+        & > span:last-of-type,
+        .connect-wallet-text {
+          display: none !important;
+        }
+      }
+    }
+  }
+
+  .ant-layout-footer {
+    padding: 24px !important;
+  }
+
+  .jetton-wallet-view {
+    padding: 0 24px !important;
+
+    .asset-name {
+      .name {
+        display: none;
+      }
+      .symbol {
+        display: inline !important;
+      }
+    }
+
+    .asset-balance .symbol {
+      display: none;
+    }
+  }
 }
 
 section.main-layout {

@@ -1,8 +1,12 @@
 body {
-  min-width: 500px;
+  min-width: 360px;
   overflow-x: hidden;
+
+  display: flex;
+  flex-direction:column;
+  min-height:100vh;
 }
 
 #root {
-  height: 100%;
+  flex: 1;
 }

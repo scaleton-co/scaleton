@@ -47,7 +47,7 @@ export function ConnectWalletButton(props: ButtonProps & { theme?: MenuTheme }) 
         loading={isLoading}
         {...props}
       >
-        {isLoading ? 'Connecting...' : 'Connect Wallet'}
+        <span className="connect-wallet-text">{isLoading ? 'Connecting...' : 'Connect Wallet'}</span>
       </Button>
     </Dropdown>
   );

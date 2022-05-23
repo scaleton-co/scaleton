@@ -14,9 +14,11 @@ export class TonhubWalletAdapter implements WalletAdapter<TonhubCreatedSession> 
   }
 
   createSession(): Promise<TonhubCreatedSession> {
+    const { location } = document;
+
     return this.tonhubConnector.createNewSession({
       name: 'Scaleton',
-      url: document.location.href,
+      url: `${location.protocol}//${location.host}`,
     });
   }
 

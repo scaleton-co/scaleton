@@ -21,7 +21,7 @@ export function NavBar() {
       <Row>
         <Col flex="none">
           <div className="navbar-logo">
-            <Link to="/"><img src={ScaletonIcon} alt="Scaleton"/> Scaleton {IS_TESTNET && (
+            <Link to="/"><img src={ScaletonIcon} alt="Scaleton"/> <span className="logo-text">Scaleton</span> {IS_TESTNET && (
               <span className="testnet-badge">testnet</span>)}</Link>
           </div>
         </Col>
@@ -45,14 +45,14 @@ export function NavBar() {
                 key: 'dapps.dex.swap',
                 label: (
                   <Link to="/dapps/dex.swap">
-                    Trade <Tag color="#f50" style={{ marginLeft: 7 }}>NEW</Tag>
+                    DEX <Tag color="#f50" style={{ marginLeft: 7 }}>NEW</Tag>
                   </Link>
                 ),
               }) : ({
                 key: 'dapps.dex.swap',
                 label: (
                   <Tooltip placement="bottomRight" title="Currently, DEX is available only in testnet.">
-                    Trade <Tag color="#f50" style={{ marginLeft: 7 }}>NEW</Tag>
+                    DEX <Tag color="#f50" style={{ marginLeft: 7 }}>NEW</Tag>
                   </Tooltip>
                 ),
                 style: {
