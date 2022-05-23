@@ -24,9 +24,7 @@ export function TonhubConnectModal() {
     [dispatch],
   );
 
-  const sessionLink = session?.link
-      .replace('ton-test://', 'https://test.tonhub.com/')
-      .replace('ton://', 'https://tonhub.com/');
+  const sessionLink = session?.link?.replace('ton-test://', 'https://test.tonhub.com/').replace('ton://', 'https://tonhub.com/');
 
   return (
     <Modal
