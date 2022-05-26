@@ -1,5 +1,6 @@
 $gray-1: #ffffff;
 $green-5: #73d13d;
+$orange-6: #fa8c16;
 $wallet-button-width: 150px;
 
 .navbar-logo {
@@ -27,11 +28,18 @@ $wallet-button-width: 150px;
   }
 }
 
-span.testnet-badge {
+span.network-badge {
   text-transform: uppercase;
   font-size: 13pt;
   font-weight: bold;
-  color: $green-5;
+
+  &.testnet {
+    color: $green-5;
+  }
+
+  &.sandbox {
+    color: $orange-6;
+  }
 }
 
 .wallet-button-section {

@@ -24,7 +24,6 @@ export function AssetsTabPaneContent({ account }: AssetsTabPaneProps) {
   const [sendJettonContract, setSendJettonContract] = useState<string | null>(null);
   const [isImportJettonActive, setImportJettonActive] = useState(false);
 
-  const jettons = useAppSelector(state => state.jettons.contracts);
   const assets = useAppSelector(state => state.jettons.assets);
   const allBalances = useAppSelector(state => state.jettons.balances);
   const balancesLoading = useAppSelector(state => state.jettons.balancesLoading);
@@ -127,7 +126,7 @@ export function AssetsTabPaneContent({ account }: AssetsTabPaneProps) {
       />
 
       {!balances && (
-        <Skeleton active paragraph={{ rows: jettons.length + 1 }}/>
+        <Skeleton active paragraph={{ rows: assets.length + 1 }}/>
       )}
 
       {balances && (

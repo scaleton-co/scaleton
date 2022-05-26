@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Address, toNano } from 'ton';
 import { assetCatalog } from '../assets/services';
-import { jettonCatalog } from './services/JettonCatalog';
 import type { RootState } from '../../store';
 import type { AssetRef } from '../assets/types/AssetRef';
 import type { Jetton } from './types/Jetton';
@@ -14,7 +13,6 @@ type AssetBalances = {
 
 interface JettonsState {
   assets: AssetRef[];
-  contracts: Jetton[];
   balancesLoading: boolean;
   balances: {
     [owner: string]: AssetBalances;
@@ -37,7 +35,6 @@ interface JettonsState {
 
 const initialState: JettonsState = {
   assets: assetCatalog.getAll(),
-  contracts: jettonCatalog.contracts,
   balancesLoading: false,
   balances: {},
   history: {},
@@ -185,7 +182,6 @@ const store = createSlice({
     });
 
     builder.addCase(importJetton.fulfilled, (state, action) => {
-      state.contracts.push(action.meta.arg);
       state.assets = action.payload;
     });
 

@@ -4,7 +4,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../../hooks';
 import { truncateAddress } from '../../jettons/utils/truncateAddress';
-import { IS_TESTNET } from '../../ton/network';
+import { isMainnet, isSandbox, isTestnet } from '../../ton/network';
 import { ConnectWalletButton } from '../../wallet/components/ConnectWalletButton/ConnectWalletButton';
 import telegramIcon from '../icons/telegram.svg';
 import { NavBarWalletMenu } from './NavBarWalletMenu';
@@ -21,8 +21,19 @@ export function NavBar() {
       <Row>
         <Col flex="none">
           <div className="navbar-logo">
-            <Link to="/"><img src={ScaletonIcon} alt="Scaleton"/> <span className="logo-text">Scaleton</span> {IS_TESTNET && (
-              <span className="testnet-badge">testnet</span>)}</Link>
+            <Link to="/">
+              <img src={ScaletonIcon} alt="Scaleton"/> <span className="logo-text">Scaleton</span>
+
+              {' '}
+
+              {isTestnet() && (
+                <span className="network-badge testnet">testnet</span>
+              )}
+
+              {isSandbox() && (
+                <span className="network-badge sandbox">sandbox</span>
+              )}
+            </Link>
           </div>
         </Col>
 
@@ -41,14 +52,7 @@ export function NavBar() {
                   <Link to="/assets">My Wallet</Link>
                 ),
               },
-              IS_TESTNET ? ({
-                key: 'dapps.dex.swap',
-                label: (
-                  <Link to="/dapps/dex.swap">
-                    DEX <Tag color="#f50" style={{ marginLeft: 7 }}>NEW</Tag>
-                  </Link>
-                ),
-              }) : ({
+              isMainnet() ? ({
                 key: 'dapps.dex.swap',
                 label: (
                   <Tooltip placement="bottomRight" title="Currently, DEX is available only in testnet.">
@@ -58,6 +62,13 @@ export function NavBar() {
                 style: {
                   cursor: 'not-allowed',
                 },
+              }) : ({
+                key: 'dapps.dex.swap',
+                label: (
+                  <Link to="/dapps/dex.swap">
+                    DEX <Tag color="#f50" style={{ marginLeft: 7 }}>NEW</Tag>
+                  </Link>
+                ),
               }),
             ]}
           />

@@ -1,9 +1,10 @@
 import React from 'react';
 import tonWalletIconPath from './icons/ton-wallet.png';
 import tonhubIconPath from './icons/tonhub.png';
+import sandboxIconPath from './icons/sandbox.png';
 import './WalletIcon.scss';
 
-export function WalletIcon({ wallet }: { wallet: 'ton-wallet' | 'tonhub' }) {
+export function WalletIcon({ wallet }: { wallet: 'ton-wallet' | 'tonhub' | 'sandbox' }) {
   switch (wallet) {
     case 'ton-wallet':
       return (
@@ -13,6 +14,11 @@ export function WalletIcon({ wallet }: { wallet: 'ton-wallet' | 'tonhub' }) {
     case 'tonhub':
       return (
         <img className="wallet-icon" src={tonhubIconPath} alt="Tonhub"/>
+      );
+
+    case 'sandbox':
+      return (
+        <img className="wallet-icon" src={sandboxIconPath} alt="Sandbox"/>
       );
 
     default:

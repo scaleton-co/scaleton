@@ -1,10 +1,7 @@
 import TonWeb from 'tonweb';
-import { IS_TESTNET } from './network';
+import { API_URLS } from '../common';
+import { CURRENT_NETWORK } from './network';
 
-export const tonClient = IS_TESTNET
-  ? new TonWeb.HttpProvider(process.env.REACT_APP_TON_API_TESTNET_URL, {
-    apiKey: process.env.REACT_APP_TON_API_TESTNET_API_KEY,
-  })
-  : new TonWeb.HttpProvider(process.env.REACT_APP_TON_API_MAINNET_URL, {
-    apiKey: process.env.REACT_APP_TON_API_MAINNET_API_KEY,
-  });
+export const tonClient = new TonWeb.HttpProvider(
+  `${API_URLS[CURRENT_NETWORK]}/v1/jsonRPC`,
+);

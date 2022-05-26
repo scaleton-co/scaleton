@@ -1,5 +1,5 @@
 import { TonhubConnector } from 'ton-x';
-import { IS_TESTNET } from '../../ton/network';
+import { isMainnet, isSandbox, isTestnet } from '../../ton/network';
 import { TransactionRequest } from './TransactionRequest';
 import { Wallet } from './Wallet';
 import { WalletAdapter } from './WalletAdapter';
@@ -36,7 +36,14 @@ export class WalletService {
 
 export const walletService = new WalletService();
 
-const tonhubConnector = new TonhubConnector({ testnet: IS_TESTNET });
+if (isMainnet() || isTestnet()) {
+  walletService.registerAdapter('ton-wallet', new TonWalletWalletAdapter());
+}
 
-walletService.registerAdapter('tonhub', new TonhubWalletAdapter(tonhubConnector));
-walletService.registerAdapter('ton-wallet', new TonWalletWalletAdapter());
+if (isMainnet() || isSandbox()) {
+  walletService.registerAdapter('tonhub', new TonhubWalletAdapter(
+    new TonhubConnector({
+      testnet: isSandbox(),
+    }),
+  ));
+}

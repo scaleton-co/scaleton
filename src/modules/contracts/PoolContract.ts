@@ -102,11 +102,12 @@ export class PoolContract {
     const { stack } = await this.client.callGetMethod(this.address, 'get_token_prices', []);
 
     const leftTokenNumerator = new BN(stack[0][1].replace(/^0x/, ''), 'hex');
-    const rightTokenNumerator = new BN(stack[1][1].replace(/^0x/, ''), 'hex');
-    const denominator = new BN(stack[2][1].replace(/^0x/, ''), 'hex');
+    const leftTokenDenominator = new BN(stack[1][1].replace(/^0x/, ''), 'hex');
+    const rightTokenNumerator = new BN(stack[2][1].replace(/^0x/, ''), 'hex');
+    const rightTokenDenominator = new BN(stack[3][1].replace(/^0x/, ''), 'hex');
 
-    const leftTokenPrice = new Big(leftTokenNumerator.toString()).div(denominator.toString());
-    const rightTokenPrice = new Big(rightTokenNumerator.toString()).div(denominator.toString());
+    const leftTokenPrice = new Big(leftTokenNumerator.toString()).div(leftTokenDenominator.toString());
+    const rightTokenPrice = new Big(rightTokenNumerator.toString()).div(rightTokenDenominator.toString());
 
     return {
       leftTokenPrice,

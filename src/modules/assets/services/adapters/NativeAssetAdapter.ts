@@ -52,8 +52,11 @@ export class NativeAssetAdapter implements AssetAdapter {
 
         const time = new Date(transaction.time * 1000);
 
-        const result: Transaction[] = [
-          {
+        const result: Transaction[] = [];
+
+        // Note: Skip external messages of the wallet to hide "noise".
+        if (!transaction.inMessage.source) {
+          result.push({
             queryId: new BN(0),
             time,
             operation: 'in',
@@ -63,7 +66,10 @@ export class NativeAssetAdapter implements AssetAdapter {
             comment: transaction.inMessage.body?.type === 'text'
               ? transaction.inMessage.body.text
               : null,
-          },
+          });
+        }
+
+        result.push(
           ...transaction.outMessages.map((message): Transaction => ({
             queryId: message.body?.type === 'data' ? extractQueryId(message.body.data) : new BN(0),
             time,
@@ -74,8 +80,8 @@ export class NativeAssetAdapter implements AssetAdapter {
             comment: message.body?.type === 'text'
               ? message.body.text
               : null,
-          }))
-        ];
+          })),
+        );
 
         result.reverse();
 

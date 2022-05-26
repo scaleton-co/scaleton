@@ -1,13 +1,14 @@
 import { QrcodeOutlined } from '@ant-design/icons';
-import { Button, Modal } from 'antd';
+import { Modal } from 'antd';
 import React, { useCallback } from 'react';
-import { isMobile } from 'react-device-detect';
-import QRCode from 'react-qr-code';
+import { isAndroid, isIOS, isMobile } from 'react-device-detect';
+import { QRCode } from 'react-qrcode-logo';
 import { TonhubCreatedSession } from 'ton-x';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { resetSession } from '../../store';
-
-const QRCodeImage = QRCode as any;
+import tonhubIconPath from '../WalletIcon/icons/tonhub.png';
+import sandboxIconPath from '../WalletIcon/icons/sandbox.png';
+import { isSandbox } from '../../../ton/network';
 
 export function TonhubConnectModal() {
   const dispatch = useAppDispatch();
@@ -17,6 +18,11 @@ export function TonhubConnectModal() {
   const isWalletReady = useAppSelector(state => !!state.wallet.wallet);
   const isConnecting = useAppSelector(state => state.wallet.isConnecting);
 
+  const applicationName = isSandbox() ? 'Sandbox' : 'Tonhub';
+  const applicationIcon = isSandbox() ? sandboxIconPath : tonhubIconPath;
+
+  const isMobileAppSupported = isIOS || isAndroid;
+
   const handleCancel = useCallback(
     () => {
       dispatch(resetSession());
@@ -24,29 +30,35 @@ export function TonhubConnectModal() {
     [dispatch],
   );
 
-  const sessionLink = session?.link?.replace('ton-test://', 'https://test.tonhub.com/').replace('ton://', 'https://tonhub.com/');
-
   return (
     <Modal
-      title="Connect Tonhub"
-      visible={isTonhub && session && !isWalletReady && isConnecting}
+      title={`Connect ${applicationName}`}
+      visible={isTonhub && !isMobileAppSupported && session && !isWalletReady && isConnecting}
       width={288}
       bodyStyle={{ padding: 16 }}
       centered={isMobile}
       onCancel={handleCancel}
-      footer={[
-        <Button key="close" onClick={handleCancel}>
-          Close
-        </Button>,
-      ]}
+      footer={null}
     >
       <ol style={{ paddingLeft: 16, marginBottom: 16 }}>
-        <li>Open Tonhub {isMobile && (<>or click <a href={sessionLink}>here</a></>)}</li>
-        <li>Touch <QrcodeOutlined /> icon in the top right corner</li>
+        <li>Open <b>{applicationName}</b> application</li>
+        <li>Touch <b><QrcodeOutlined /></b> icon in the top right corner</li>
         <li>Scan the next QR code:</li>
       </ol>
 
-      <QRCodeImage value={session?.link} />
+      <QRCode
+        value={session?.link}
+        size={256}
+        quietZone={0}
+        logoImage={applicationIcon}
+        removeQrCodeBehindLogo
+        eyeRadius={[
+          [10, 10, 0, 10], // top/left eye
+          [10, 10, 10, 0], // top/right eye
+          [10, 0, 10, 10], // bottom/left
+        ]}
+        fgColor="#002457"
+      />
     </Modal>
   );
 }

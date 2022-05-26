@@ -1,32 +1,27 @@
 import { TonClient } from 'ton';
 import MAINNET_ASSETS from '../../../static/assets/mainnet.yaml';
 import TESTNET_ASSETS from '../../../static/assets/testnet.yaml';
-import { IS_TESTNET } from '../../ton/network';
+import SANDBOX_ASSETS from '../../../static/assets/sandbox.yaml';
+import { API_URLS } from '../../common';
+import { CURRENT_NETWORK, Network } from '../../ton/network';
 import { walletService } from '../../wallet/services/WalletService';
 import { AssetCatalog } from './AssetCatalog';
 import { JettonAssetAdapter } from './adapters/JettonAssetAdapter';
 import { NativeAssetAdapter } from './adapters/NativeAssetAdapter';
 import { LocalStorageAssetStore } from './stores/LocalStorageAssetStore';
 
-export const assetStore = new LocalStorageAssetStore(
-  IS_TESTNET
-    ? 'assets:testnet'
-    : 'assets:mainnet'
-);
+const ALL_ASSETS = {
+  [Network.MAINNET]: MAINNET_ASSETS,
+  [Network.TESTNET]: TESTNET_ASSETS,
+  [Network.SANDBOX]: SANDBOX_ASSETS,
+};
 
-export const tonClient = IS_TESTNET
-  ? new TonClient({
-    endpoint: process.env.REACT_APP_TON_API_TESTNET_URL!,
-    apiKey: process.env.REACT_APP_TON_API_TESTNET_API_KEY,
-  })
-  : new TonClient({
-    endpoint: process.env.REACT_APP_TON_API_MAINNET_URL!,
-    apiKey: process.env.REACT_APP_TON_API_MAINNET_API_KEY,
-  });
+export const tonClient = new TonClient({
+  endpoint: `${API_URLS[CURRENT_NETWORK]}/v1/jsonRPC`,
+});
 
-const standardAssets = IS_TESTNET ? TESTNET_ASSETS : MAINNET_ASSETS;
-
-export const assetCatalog = new AssetCatalog(assetStore, standardAssets);
+export const assetStore = new LocalStorageAssetStore(`assets:${CURRENT_NETWORK}`);
+export const assetCatalog = new AssetCatalog(assetStore, ALL_ASSETS[CURRENT_NETWORK]);
 
 assetCatalog.registerAdapter('native', new NativeAssetAdapter(tonClient, walletService));
 assetCatalog.registerAdapter('jetton', new JettonAssetAdapter(tonClient, walletService));

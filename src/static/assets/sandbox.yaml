@@ -1,0 +1,6 @@
+---
+- id: ton
+  type: native
+  name: The Open Network
+  symbol: TON
+  url: https://ton.org

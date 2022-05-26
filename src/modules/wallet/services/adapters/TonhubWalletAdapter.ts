@@ -1,3 +1,4 @@
+import { isAndroid, isIOS } from 'react-device-detect';
 import { Cell, ConfigStore } from 'ton';
 import { TonhubConnector } from 'ton-x';
 import { TonhubCreatedSession } from 'ton-x/dist/connector/TonhubConnector';
@@ -13,13 +14,28 @@ export class TonhubWalletAdapter implements WalletAdapter<TonhubCreatedSession> 
   ) {
   }
 
-  createSession(): Promise<TonhubCreatedSession> {
+  async createSession(): Promise<TonhubCreatedSession> {
     const { location } = document;
 
-    return this.tonhubConnector.createNewSession({
+    const session = await this.tonhubConnector.createNewSession({
       name: 'Scaleton',
       url: `${location.protocol}//${location.host}`,
     });
+
+    // NOTE: Every wallet tries to handle ton:// links. This is needed to launch exactly Tonhub / Sandbox application.
+    const sessionLink = session.link
+      .replace('ton-test://', 'https://test.tonhub.com/')
+      .replace('ton://', 'https://tonhub.com/');
+
+    if (isIOS || isAndroid) {
+      window.location.assign(sessionLink);
+    }
+
+    return {
+      id: session.id,
+      seed: session.seed,
+      link: sessionLink,
+    };
   }
 
   async awaitReadiness(session: TonhubCreatedSession): Promise<Wallet> {
