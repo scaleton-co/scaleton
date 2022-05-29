@@ -11,15 +11,18 @@ The first DeFi wallet for TON with Jettons ([TIP-74](https://github.com/ton-bloc
 * Transfers
 * History of transactions
 * Import ([TIP-74](https://github.com/ton-blockchain/TIPs/issues/74)) contracts
+* Explore accounts NFTs
+* Authentication via TON Wallet / Tonkeeper / Tonhub
 
 ### Security Issues
 
-If you discover a security vulnerability in Express, please see [Security Policies and Procedures](SECURITY.md).
+If you discover a security vulnerability, please see [Security Policies and Procedures](SECURITY.md).
 
 ### Links
 
-* [scaleton.co](https://scaleton.co) - mainnet
-* [testnet.scaleton.co](https://testnet.scaleton.co) - testnet
+* [scaleton.co](https://scaleton.io) - mainnet
+* [testnet.scaleton.co](https://testnet.scaleton.io) - testnet
+* [sandbox.scaleton.co](https://sandbox.scaleton.io) - sandbox
 
 ### People
 

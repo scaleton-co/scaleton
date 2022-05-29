@@ -5,7 +5,7 @@ import { Wallet } from '../common/Wallet';
 import { WalletAdapter } from '../common/WalletAdapter';
 import { WalletFeature } from '../common/WalletFeature';
 import { JettonMasterContract } from '../../contracts/JettonMasterContract';
-import { stringToCell, timeout } from '../common/utils';
+import { timeout } from '../common/utils';
 import { DEFAULT_JETTON_GAS_FEE } from '../common/constants';
 
 export function delay(ms: number) {
