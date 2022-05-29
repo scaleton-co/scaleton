@@ -7,6 +7,8 @@ import { WalletFeature } from '../common/WalletFeature';
 import { JettonMasterContract } from '../../contracts/JettonMasterContract';
 import { timeout } from '../common/utils';
 import { DEFAULT_JETTON_GAS_FEE } from '../common/constants';
+import { preloadImage } from '../../common/utils/preloadImage';
+import tonWalletIcon from '../common/components/WalletIcon/icons/ton-wallet.png';
 
 export function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -22,6 +24,7 @@ export class TonWalletWalletAdapter implements WalletAdapter<boolean> {
     private readonly tonClient: TonClient,
     private readonly tonWalletClient: TonWalletClient,
   ) {
+    preloadImage(tonWalletIcon);
   }
 
   async createSession(): Promise<boolean> {

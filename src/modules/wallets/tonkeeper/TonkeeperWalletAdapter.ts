@@ -9,6 +9,8 @@ import { WalletFeature } from '../common/WalletFeature';
 import { API_URLS, scaletonClient } from '../../common';
 import { CURRENT_NETWORK } from '../../common/network';
 import { DEFAULT_JETTON_GAS_FEE } from '../common/constants';
+import { preloadImage } from '../../common/utils/preloadImage';
+import tonkeeperIcon from '../common/components/WalletIcon/icons/tonkeeper.svg';
 
 export type TonkeeperSession = {
   sessionId: string;
@@ -23,6 +25,7 @@ export class TonkeeperWalletAdapter implements WalletAdapter<TonkeeperSession> {
   constructor(
     private readonly store: Store,
   ) {
+    preloadImage(tonkeeperIcon);
   }
 
   async createSession(): Promise<TonkeeperSession> {

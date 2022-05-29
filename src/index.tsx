@@ -26,6 +26,7 @@ Sentry.init({
 if (isMainnet() || isTestnet()) {
   walletService.registerAdapter('tonkeeper', new TonkeeperWalletAdapter(store));
 }
+
 walletService.registerAdapter('ton-wallet', new TonWalletWalletAdapter(tonClient, new TonWalletClient(window)));
 
 if (isMainnet() || isSandbox()) {

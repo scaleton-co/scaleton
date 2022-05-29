@@ -7,6 +7,10 @@ import { WalletAdapter } from '../common/WalletAdapter';
 import { WalletFeature } from '../common/WalletFeature';
 import { JettonMasterContract } from '../../contracts/JettonMasterContract';
 import { DEFAULT_JETTON_GAS_FEE } from '../common/constants';
+import { preloadImage } from '../../common/utils/preloadImage';
+import { isMainnet } from '../../common/network';
+import sandboxIcon from '../common/components/WalletIcon/icons/sandbox.png';
+import tonhubIcon from '../common/components/WalletIcon/icons/tonhub.png';
 
 const TONHUB_TIMEOUT = 5 * 60 * 1000;
 
@@ -22,6 +26,7 @@ export class TonhubWalletAdapter implements WalletAdapter<TonhubSession> {
     private readonly tonClient: TonClient,
     private readonly tonhubConnector: TonhubConnector,
   ) {
+    preloadImage(isMainnet() ? tonhubIcon : sandboxIcon);
   }
 
   async createSession(): Promise<TonhubSession> {
