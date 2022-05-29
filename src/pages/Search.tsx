@@ -16,7 +16,7 @@ export function Search() {
 
       navigate(`/${walletAddress}/assets`);
     },
-    [navigate, walletAddress],
+    [navigate, initialWalletAddress, walletAddress],
   );
 
   return <SearchView />;
