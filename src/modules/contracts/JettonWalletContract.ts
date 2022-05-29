@@ -71,7 +71,7 @@ export class JettonWalletContract implements Contract {
     queryId: number | BN,
     amount: number | BN;
     destination: Address;
-    responseDestination: Address | null;
+    responseDestination?: Address | null;
     forwardAmount: number | BN;
     forwardPayload: Cell | null;
   }): Cell {
@@ -84,10 +84,15 @@ export class JettonWalletContract implements Contract {
     cell.bits.writeAddress(responseDestination);
     cell.bits.writeBit(false);
     cell.bits.writeCoins(forwardAmount);
-    cell.bits.writeBit(false);
 
-    if (forwardPayload) {
-      cell.writeCell(forwardPayload);
+    if (!forwardPayload || forwardPayload.bits.length <= cell.bits.available) {
+      cell.bits.writeBit(false);
+      if (forwardPayload) {
+        cell.writeCell(forwardPayload);
+      }
+    } else {
+      cell.bits.writeBit(true);
+      cell.withReference(forwardPayload);
     }
 
     return cell;

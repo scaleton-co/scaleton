@@ -1,1 +1,1 @@
-export const IPFS_GATEWAY_PREFIX = 'https://cloudflare-ipfs.com/ipfs/';
+export const IPFS_GATEWAY_PREFIX = 'https://ipfs.io/ipfs/';

@@ -1,11 +1,11 @@
 import { WalletOutlined } from '@ant-design/icons';
-import { Button, Col, Dropdown, Layout, Menu, Row, Tag, Tooltip } from 'antd';
+import { Button, Col, Dropdown, Layout, Menu, Row, Tag, Tooltip, Typography } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../../hooks';
 import { truncateAddress } from '../../jettons/utils/truncateAddress';
-import { isMainnet, isSandbox, isTestnet } from '../../ton/network';
-import { ConnectWalletButton } from '../../wallet/components/ConnectWalletButton/ConnectWalletButton';
+import { isMainnet, isSandbox, isTestnet } from '../../common/network';
+import { ConnectWalletButton } from '../../wallets/common/components/ConnectWalletButton';
 import telegramIcon from '../icons/telegram.svg';
 import { NavBarWalletMenu } from './NavBarWalletMenu';
 import ScaletonIcon from './ScaletonIcon.svg';
@@ -14,7 +14,7 @@ import './NavBar.scss';
 const { Header } = Layout;
 
 export function NavBar() {
-  const wallet = useAppSelector(state => state.wallet.wallet);
+  const wallet = useAppSelector(state => state.wallets.common.wallet);
 
   return (
     <Header className="header">
@@ -75,14 +75,13 @@ export function NavBar() {
         </Col>
 
         <Col flex="auto" className="links">
-          <Button
-            ghost
-            type="link"
+          <Typography.Link
             href="https://t.me/Scaleton"
-            icon={<img src={telegramIcon} className="navbar-icon" alt="@Scaleton"/>}
+            target="_blank"
+            rel="noreferrer"
           >
-            {' '}
-          </Button>
+            <img src={telegramIcon} className="navbar-icon" alt="@Scaleton"/>
+          </Typography.Link>
         </Col>
 
         <Col flex="none" className="wallet-button-section">

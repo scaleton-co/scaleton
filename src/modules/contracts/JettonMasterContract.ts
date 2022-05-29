@@ -1,9 +1,12 @@
 import BN from 'bn.js';
 import { Cell } from 'ton';
 import { JettonWalletContract } from './JettonWalletContract';
-import type { Address, ContractSource, TonClient } from 'ton';
+import type { ContractSource, TonClient } from 'ton';
+import { Address } from 'ton';
 
 export class JettonMasterContract {
+  private static knownWallets: Map<string, string> = new Map();
+
   constructor(
     private readonly client: TonClient,
     public readonly source: ContractSource,
@@ -45,19 +48,38 @@ export class JettonMasterContract {
     };
   }
 
-  async getJettonWallet(ownerAddress: Address): Promise<JettonWalletContract> {
+  private async resolveWalletAddress(owner: Address): Promise<Address> {
+    let knownWalletAddress = JettonMasterContract.knownWallets.get(`${this.address.toString()}|${owner.toString()}`);
+
+    if (knownWalletAddress) {
+      return Address.parseRaw(knownWalletAddress);
+    }
+
     const ownerAddressCell = new Cell();
-    ownerAddressCell.bits.writeAddress(ownerAddress);
+    ownerAddressCell.bits.writeAddress(owner);
 
     const { stack } = await this.client.callGetMethod(this.address, 'get_wallet_address', [
-      ['tvm.Slice', ownerAddressCell.toBoc({ idx: false }).toString('base64')]
+      [
+        'tvm.Slice',
+        ownerAddressCell.toBoc({ idx: false }).toString('base64'),
+      ],
     ]);
 
-    const jettonWalletAddress = Cell
+    const walletAddress = Cell
       .fromBoc(Buffer.from(stack[0][1].bytes, 'base64'))[0]
       .beginParse()
       .readAddress()!;
 
-    return new JettonWalletContract(this.client, null as any, jettonWalletAddress);
+    JettonMasterContract.knownWallets.set(`${this.address.toString()}|${owner.toString()}`, walletAddress.toString());
+
+    return walletAddress;
+  }
+
+  async getJettonWallet(ownerAddress: Address): Promise<JettonWalletContract> {
+    return new JettonWalletContract(
+      this.client,
+      null as any,
+      await this.resolveWalletAddress(ownerAddress),
+    );
   }
 }

@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import dex from './modules/dex/store';
-import jettons from './modules/jettons/store';
-import wallet from './modules/wallet/store';
+import dex from './modules/dapps/dex.swap/store';
+import assets from './modules/assets/store';
+import wallets from './modules/wallets/store';
 
 export const store = configureStore({
   reducer: {
-    jettons,
+    assets,
     dex,
-    wallet,
+    wallets,
   },
 });
 

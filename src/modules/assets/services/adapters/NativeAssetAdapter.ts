@@ -1,19 +1,12 @@
 import { Big } from 'big.js';
 import BN from 'bn.js';
-import { Address, Cell, TonClient } from 'ton';
-import { PoolContract } from '../../../contracts/PoolContract';
-import { TradeDirection } from '../../../contracts/enums/TradeDirection';
-import { TransactionRequest } from '../../../wallet/services/TransactionRequest';
-import { WalletService } from '../../../wallet/services/WalletService';
-import { AssetRef } from '../../types/AssetRef';
-import { JettonRef } from '../../types/JettonRef';
-import { Transaction } from '../../types/Transaction';
+import { Address, Cell, parseTransaction, TonClient } from 'ton';
+import { AssetRef, Transaction } from '../../types';
 import { AssetAdapter } from '../AssetAdapter';
 
 export class NativeAssetAdapter implements AssetAdapter {
   constructor(
     private readonly tonClient: TonClient,
-    private readonly walletService: WalletService,
   ) {
   }
 
@@ -55,7 +48,10 @@ export class NativeAssetAdapter implements AssetAdapter {
         const result: Transaction[] = [];
 
         // Note: Skip external messages of the wallet to hide "noise".
-        if (!transaction.inMessage.source) {
+        if (transaction.inMessage.source) {
+          const inMessageBody = parseTransaction(0, Cell.fromBoc(Buffer.from(transactions[0].data, 'base64'))[0].beginParse())
+            .inMessage?.body.beginParse();
+
           result.push({
             queryId: new BN(0),
             time,
@@ -66,6 +62,7 @@ export class NativeAssetAdapter implements AssetAdapter {
             comment: transaction.inMessage.body?.type === 'text'
               ? transaction.inMessage.body.text
               : null,
+            body: inMessageBody?.readRemainingBytes() ?? null,
           });
         }
 
@@ -80,6 +77,7 @@ export class NativeAssetAdapter implements AssetAdapter {
             comment: message.body?.type === 'text'
               ? message.body.text
               : null,
+            body: null,
           })),
         );
 
@@ -89,39 +87,5 @@ export class NativeAssetAdapter implements AssetAdapter {
       })
       .flat()
       .filter(transaction => !!transaction) as Transaction[];
-  }
-
-  async requestTransaction<S>(
-    adapterId: string,
-    session: S,
-    asset: AssetRef,
-    request: TransactionRequest,
-  ): Promise<void> {
-    await this.walletService.requestTransaction(adapterId, session, request);
-  }
-
-  async requestSwap<S>(
-    adapterId: string,
-    session: S,
-    asset: JettonRef,
-    poolContractAddress: Address,
-    tradeDirection: TradeDirection,
-    sourceAmountIn: BN | number,
-    minimumAmountOut: BN | number = 0,
-    queryId: BN | number = 0,
-  ): Promise<void> {
-    const poolContract = new PoolContract(this.tonClient, null as any, poolContractAddress);
-    const swapRequest = poolContract.createSwapNativeRequest(tradeDirection, minimumAmountOut, queryId);
-
-    await this.walletService.requestTransaction(
-      adapterId,
-      session,
-      {
-        to: poolContract.address.toFriendly(),
-        value: sourceAmountIn.toString(10),
-        timeout: 2 * 60 * 1000,
-        payload: swapRequest,
-      },
-    );
   }
 }

@@ -1,6 +1,8 @@
+import { AssetType } from './AssetType';
+
 export interface JettonRef {
   id: string;
-  type: 'jetton';
+  type: AssetType.JETTON;
   isCustom?: boolean;
   name: string;
   symbol: string;

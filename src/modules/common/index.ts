@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CURRENT_NETWORK, Network } from '../ton/network';
+import { CURRENT_NETWORK, Network } from './network';
 
 export const API_URLS = {
   [Network.MAINNET]: process.env.REACT_APP_API_MAINNET_URL!,

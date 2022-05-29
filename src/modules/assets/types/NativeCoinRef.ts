@@ -1,6 +1,8 @@
+import { AssetType } from './AssetType';
+
 export interface NativeCoinRef {
   id: string;
-  type: 'native';
+  type: AssetType.NATIVE;
   isCustom: boolean;
   name: string;
   symbol: string;

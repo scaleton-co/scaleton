@@ -9162,10 +9162,10 @@ ton-crypto@^3.0.0:
     ton-crypto-primitives "2.0.0"
     tweetnacl "1.0.3"
 
-ton-x@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/ton-x/-/ton-x-0.4.0.tgz#df9190c3cfd041d55b81090cc56bd013b18bd98b"
-  integrity sha512-5AsFD+XuRSQpA+x1rFQ2x+QNVfAyEZ9H0GJQLGDpCQtqQQ8zRJganOG7YyZtq0dT5wDs47PmfXl7X137V90gxw==
+ton-x@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/ton-x/-/ton-x-0.4.1.tgz#597b7e0520d0a4649a4876869d85f4038c1cb91b"
+  integrity sha512-3dP14V9gdTXdYS3z7pHF+Z/6RIV2aJF183egVXJfAm5asE5ND2HaNtN6Pb0gXEgfr1LGxIQXlFz4vFQl7GwaXw==
   dependencies:
     "@types/bn.js" "^5.1.0"
     axios "^0.27.0"

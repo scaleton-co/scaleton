@@ -1,7 +1,7 @@
 import { Menu } from 'antd';
 import React, { useCallback } from 'react';
 import { useAppDispatch } from '../../../hooks';
-import { terminateSession } from '../../wallet/store';
+import { terminateSession } from '../../wallets/common/store';
 
 export function NavBarWalletMenu() {
   const dispatch = useAppDispatch();

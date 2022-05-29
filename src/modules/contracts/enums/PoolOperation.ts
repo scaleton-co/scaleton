@@ -1,9 +1,0 @@
-export enum PoolOperation {
-  SET_CONTROLLER = 0x41ae467b,
-  INIT = 0x5ba6ae0f,
-  DEPOSIT_NATIVE = 0x6193f196,
-  DEPOSIT = 0x64536f13,
-  WITHDRAW_SINGLE = 0x2b441a63,
-  SWAP = 0x509e49f,
-  SWAP_NATIVE = 0x5c629fc5,
-}

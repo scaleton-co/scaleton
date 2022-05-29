@@ -1,0 +1,1 @@
+export const DEFAULT_JETTON_GAS_FEE = 0.035;

@@ -1,7 +1,6 @@
 import { Big } from 'big.js';
 import BN from 'bn.js';
-import { contractAddress, Cell, TonClient, ContractSource, Address } from 'ton';
-import { PoolOperation } from './enums/PoolOperation';
+import { contractAddress, TonClient, ContractSource, Address } from 'ton';
 import { PoolStatus } from './enums/PoolStatus';
 import { TradeDirection } from './enums/TradeDirection';
 
@@ -28,68 +27,40 @@ export class PoolContract {
     return this.client.isContractDeployed(this.address);
   }
 
-  createInitializeMessage(queryId = 0): Cell {
-    const cell = new Cell();
-
-    cell.bits.writeUint(PoolOperation.INIT, 32);
-    cell.bits.writeUint(queryId || 0, 64);
-
-    return cell;
-  }
-
-  createSetControllerRequest(controllerAddress: Address, queryId = 0): Cell {
-    const cell = new Cell();
-
-    cell.bits.writeUint(PoolOperation.SET_CONTROLLER, 32);
-    cell.bits.writeUint(queryId || 0, 64);
-    cell.bits.writeAddress(controllerAddress);
-
-    return cell;
-  }
-
-  createDepositRequest(tradeDirection: TradeDirection, minimumPoolTokenAmount: number | BN = 0): Cell {
-    const cell = new Cell();
-
-    cell.bits.writeUint(PoolOperation.DEPOSIT, 32);
-    cell.bits.writeUint(tradeDirection, 1);
-    cell.bits.writeCoins(minimumPoolTokenAmount);
-
-    return cell;
-  }
-
-  createSwapRequest(tradeDirection: TradeDirection, minimumAmountOut: number | BN = 0): Cell {
-    const cell = new Cell();
-
-    cell.bits.writeUint(PoolOperation.SWAP, 32);
-    cell.bits.writeUint(tradeDirection, 1);
-    cell.bits.writeCoins(minimumAmountOut);
-
-    return cell;
-  }
-
-  createSwapNativeRequest(
+  createDepositRequestText(
     tradeDirection: TradeDirection,
-    minimumAmountOut: BN | number = 0,
-    queryId: BN | number = 0,
+    minimumPoolTokenAmount: number | BN = 0,
+    queryId: number | BN = 0,
   ) {
-    const cell = new Cell();
+    const queryIdText = new BN(queryId).toString('hex', 16);
+    const tradeDirectionText = new BN(tradeDirection).toString('hex', 1);
+    const minimumPoolTokenAmountText = new BN(minimumPoolTokenAmount).toString('hex', 64);
 
-    cell.bits.writeUint(PoolOperation.SWAP_NATIVE, 32);
-    cell.bits.writeUint(queryId, 64);
-    cell.bits.writeUint(tradeDirection, 1);
-    cell.bits.writeCoins(minimumAmountOut);
-
-    return cell;
+    return `dep#${queryIdText}${tradeDirectionText}${minimumPoolTokenAmountText}`;
   }
 
-  createWithdrawSingleRequest(tradeDirection: TradeDirection, minimumAmountOut: number | BN = 0): Cell {
-    const cell = new Cell();
+  createSwapRequestText(
+    tradeDirection: TradeDirection,
+    minimumAmountOut: number | BN = 0,
+    queryId:  number | BN = 0,
+  ) {
+    const queryIdText = new BN(queryId).toString('hex', 16);
+    const tradeDirectionText = new BN(tradeDirection).toString('hex', 1);
+    const minimumAmountOutText = new BN(minimumAmountOut).toString('hex', 64);
 
-    cell.bits.writeUint(PoolOperation.WITHDRAW_SINGLE, 32);
-    cell.bits.writeUint(tradeDirection, 1);
-    cell.bits.writeCoins(minimumAmountOut);
+    return `swp#${queryIdText}${tradeDirectionText}${minimumAmountOutText}`;
+  }
 
-    return cell;
+  createWithdrawSingleRequestText(
+    tradeDirection: TradeDirection,
+    minimumAmountOut: BN | number,
+    queryId:  number | BN = 0,
+  ) {
+    const queryIdText = new BN(queryId).toString('hex', 16);
+    const tradeDirectionText = new BN(tradeDirection).toString('hex', 1);
+    const minimumAmountOutText = new BN(minimumAmountOut).toString('hex', 64);
+
+    return `wds#${queryIdText}${tradeDirectionText}${minimumAmountOutText}`;
   }
 
   async getStatus(): Promise<PoolStatus> {
@@ -99,15 +70,15 @@ export class PoolContract {
   }
 
   async getTokenPrices(): Promise<any> {
-    const { stack } = await this.client.callGetMethod(this.address, 'get_token_prices', []);
+    const { stack } = await this.client.callGetMethod(this.address, 'get_token_price', []);
 
     const leftTokenNumerator = new BN(stack[0][1].replace(/^0x/, ''), 'hex');
     const leftTokenDenominator = new BN(stack[1][1].replace(/^0x/, ''), 'hex');
-    const rightTokenNumerator = new BN(stack[2][1].replace(/^0x/, ''), 'hex');
-    const rightTokenDenominator = new BN(stack[3][1].replace(/^0x/, ''), 'hex');
 
     const leftTokenPrice = new Big(leftTokenNumerator.toString()).div(leftTokenDenominator.toString());
-    const rightTokenPrice = new Big(rightTokenNumerator.toString()).div(rightTokenDenominator.toString());
+    const rightTokenPrice = new Big(1).div(leftTokenPrice);
+
+    console.log(leftTokenPrice.toNumber());
 
     return {
       leftTokenPrice,

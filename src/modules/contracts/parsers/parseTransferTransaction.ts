@@ -18,8 +18,16 @@ export function parseTransferTransaction(bodySlice: Slice, transaction: TonTrans
   bodySlice.skip(1); // custom_payload
   bodySlice.readCoins(); // forward_ton_amount
 
-  const comment = (!bodySlice.readBit() && bodySlice.remaining && (bodySlice.remaining % 8) === 0)
-    ? bodySlice.readRemainingBytes().toString()
+  const commentCell = bodySlice.readBit()
+    ? bodySlice.readRef()
+    : bodySlice;
+
+  if (commentCell.remaining >= 32) {
+    commentCell.skip(32);
+  }
+
+  const comment = commentCell.remaining % 8 === 0
+    ? commentCell.readRemainingBytes().toString()
     : '';
 
   return {

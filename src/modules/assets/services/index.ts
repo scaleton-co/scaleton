@@ -1,14 +1,14 @@
 import { TonClient } from 'ton';
-import MAINNET_ASSETS from '../../../static/assets/mainnet.yaml';
-import TESTNET_ASSETS from '../../../static/assets/testnet.yaml';
-import SANDBOX_ASSETS from '../../../static/assets/sandbox.yaml';
+import MAINNET_ASSETS from '../static/assets.mainnet.yaml';
+import TESTNET_ASSETS from '../static/assets.testnet.yaml';
+import SANDBOX_ASSETS from '../static/assets.sandbox.yaml';
 import { API_URLS } from '../../common';
-import { CURRENT_NETWORK, Network } from '../../ton/network';
-import { walletService } from '../../wallet/services/WalletService';
+import { CURRENT_NETWORK, Network } from '../../common/network';
 import { AssetCatalog } from './AssetCatalog';
 import { JettonAssetAdapter } from './adapters/JettonAssetAdapter';
 import { NativeAssetAdapter } from './adapters/NativeAssetAdapter';
 import { LocalStorageAssetStore } from './stores/LocalStorageAssetStore';
+import { AssetType } from '../types';
 
 const ALL_ASSETS = {
   [Network.MAINNET]: MAINNET_ASSETS,
@@ -23,5 +23,5 @@ export const tonClient = new TonClient({
 export const assetStore = new LocalStorageAssetStore(`assets:${CURRENT_NETWORK}`);
 export const assetCatalog = new AssetCatalog(assetStore, ALL_ASSETS[CURRENT_NETWORK]);
 
-assetCatalog.registerAdapter('native', new NativeAssetAdapter(tonClient, walletService));
-assetCatalog.registerAdapter('jetton', new JettonAssetAdapter(tonClient, walletService));
+assetCatalog.registerAdapter(AssetType.NATIVE, new NativeAssetAdapter(tonClient));
+assetCatalog.registerAdapter(AssetType.JETTON, new JettonAssetAdapter(tonClient));

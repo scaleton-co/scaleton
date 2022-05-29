@@ -18,7 +18,7 @@
     "react-redux": "^8.0.0",
     "react-router-dom": "6",
     "ton": "^9.6.3",
-    "ton-x": "^0.4.0",
+    "ton-x": "^0.4.1",
     "tonweb": "^0.0.38"
   },
   "scripts": {

@@ -2,7 +2,7 @@ import { LinkOutlined } from '@ant-design/icons';
 import { Col, Modal, Row, Space, Statistic, Tag, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
-import { SquareImage } from '../SquareImage/SquareImage';
+import { SquareImage } from '../../../common/components/SquareImage/SquareImage';
 import { getNftItem } from '../../api/getNftItem';
 import type { NftItem } from '../../types/NftItem';
 

@@ -1,0 +1,21 @@
+---
+- id: ton
+  type: native
+  name: The Open Network
+  symbol: TON
+  url: https://ton.org
+
+- id: jetton:0:0e3ad32b1d8fd38fdf9a5b6fe2032b6d2dbaa5803a70f05d6450cf4b7065116a
+  type: jetton
+  name: Scaleton
+  symbol: SCALE
+  contractAddress: EQAOOtMrHY_Tj9-aW2_iAyttLbqlgDpw8F1kUM9LcGURakhl
+  image: ipfs://QmSMiXsZYMefwrTQ3P6HnDQaCpecS4EWLpgKK5EX1G8iA8
+  url: https://scaleton.co
+
+- id: jetton:0:2f0df5851b4a185f5f63c0d0cd0412f5aca353f577da18ff47c936f99dbd849a
+  type: jetton
+  name: Tegro
+  symbol: TGR
+  contractAddress: EQAvDfWFG0oYX19jwNDNBBL1rKNT9XfaGP9HyTb5nb2Eml6y
+  image: https://tegro.io/tgr.png

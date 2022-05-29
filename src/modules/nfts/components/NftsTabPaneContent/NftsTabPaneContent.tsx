@@ -1,6 +1,6 @@
 import { Button, Card, Col, Empty, PageHeader, Row, Skeleton } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { SquareImage } from '../SquareImage/SquareImage';
+import { SquareImage } from '../../../common/components/SquareImage/SquareImage';
 import { NftItemPreviewModal } from '../NftItemPreviewModal/NftItemPreviewModal';
 import { getNftItemsByOwner } from '../../api/getNftItemsByOwner';
 import type { NftItem } from '../../types/NftItem';

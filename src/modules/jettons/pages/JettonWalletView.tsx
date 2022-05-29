@@ -3,16 +3,17 @@ import { Layout, PageHeader, message, Tabs } from 'antd';
 import React, { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppSelector } from '../../../hooks';
-import { ConnectWalletView } from '../../wallet/pages/ConnectWalletView';
-import { Address } from '../components/Address/Address';
-import { AssetsTabPaneContent } from '../components/AssetsTabPaneContent/AssetsTabPaneContent';
+import { ConnectWalletView } from '../../wallets/common/pages/ConnectWalletView';
+import { AddressText } from '../../common/components/AddressText/AddressText';
+import { AssetsTabPaneContent } from '../../assets/components/AssetsTabPaneContent/AssetsTabPaneContent';
 import { NftsTabPaneContent } from '../../nfts/components/NftsTabPaneContent/NftsTabPaneContent';
+import { selectWalletAddress } from '../../wallets/common/selectors/selectWalletAddress';
 import './JettonWalletView.scss';
 
 const { Content } = Layout;
 
 export function JettonWalletView() {
-  const walletAddress = useAppSelector(state => state.wallet.wallet?.address);
+  const walletAddress = useAppSelector(selectWalletAddress);
   const { address: account, module } = useParams();
   const navigate = useNavigate();
   const activeTab = module === 'nfts' ? 'nfts' : 'assets';
@@ -24,7 +25,7 @@ export function JettonWalletView() {
       e.preventDefault();
       if (!account) return;
       navigator.clipboard.writeText(account);
-      message.info('Address saved to clipboard.');
+      message.info('Address is saved to clipboard.');
     },
     [account],
   );
@@ -46,7 +47,7 @@ export function JettonWalletView() {
         ghost={true}
         title={(
           <>
-            <Address value={account}/>
+            <AddressText value={account}/>
             <a href="#" onClick={handleAddressClick}
                style={{ marginLeft: 6, fontSize: '12pt', color: 'rgba(0, 0, 0, 0.85)' }}><CopyOutlined/></a>
             {isMyAccount && (

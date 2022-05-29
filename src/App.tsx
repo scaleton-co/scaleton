@@ -3,10 +3,12 @@ import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useAppDispatch } from './hooks';
 import { NavBar } from './modules/layout/components/NavBar';
-import { TonhubConnectModal } from './modules/wallet/components/TonhubConnectModal/TonhubConnectModal';
-import { restoreSession } from './modules/wallet/store';
+import { TonhubConnectModal } from './modules/wallets/tonhub/components/TonhubConnectModal/TonhubConnectModal';
+import { TonkeeperConnectModal } from './modules/wallets/tonkeeper/components/TonkeeperConnectModal';
+import { restoreSession } from './modules/wallets/common/store';
 import { Connect } from './pages/Connect';
 import { Jettons } from './pages/Jettons';
+import { Search } from './pages/Search';
 import { Trade } from './pages/Trade';
 import './App.scss';
 
@@ -28,7 +30,7 @@ function App() {
         <NavBar/>
 
         <Routes>
-          <Route path="/" element={<Connect/>}/>
+          <Route path="/" element={<Search/>}/>
           <Route path="/assets" element={<Connect/>}/>
           <Route path="/connect" element={<Connect/>}/>
           <Route path="/dapps/dex.swap" element={<Trade/>}/>
@@ -52,7 +54,9 @@ function App() {
         </div>
       </Footer>
 
-      <TonhubConnectModal/>
+      <TonhubConnectModal />
+
+      <TonkeeperConnectModal />
     </>
   );
 }

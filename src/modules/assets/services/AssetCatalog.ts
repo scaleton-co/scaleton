@@ -1,12 +1,8 @@
 import { Big } from 'big.js';
-import BN from 'bn.js';
 import { Address } from 'ton';
-import { TradeDirection } from '../../contracts/enums/TradeDirection';
 import { AssetStore } from './AssetStore';
-import type { TransactionRequest } from '../../wallet/services/TransactionRequest';
-import type { AssetRef } from '../types/AssetRef';
-import type { JettonRef } from '../types/JettonRef';
-import type { Transaction } from '../types/Transaction';
+import { AssetType } from '../types';
+import type { AssetRef, JettonRef, Transaction } from '../types';
 import type { AssetAdapter } from './AssetAdapter';
 
 export class AssetCatalog {
@@ -34,12 +30,18 @@ export class AssetCatalog {
     ];
   }
 
-  getAll(): AssetRef[] {
+  getAssets(): AssetRef[] {
     return this.assets;
   }
 
-  getById(assetId: string): AssetRef | null {
-    return this.assets.find(asset => asset.id === assetId) ?? null;
+  getAsset(assetId: string): AssetRef {
+    const asset = this.assets.find(asset => asset.id === assetId);
+
+    if (!asset) {
+      throw new Error('Asset is not registered.');
+    }
+
+    return asset;
   }
 
   importJetton(jetton: Omit<JettonRef, 'id' | 'type'>) {
@@ -49,7 +51,7 @@ export class AssetCatalog {
       ...this.assetStore.load(),
       {
         id: `jetton:${jettonAddress.toString()}`,
-        type: 'jetton',
+        type: AssetType.JETTON,
         ...jetton,
       },
     ]);
@@ -68,65 +70,26 @@ export class AssetCatalog {
   }
 
   async getBalance(ownerAddress: Address, assetId: string): Promise<Big> {
-    const asset = this.getById(assetId);
-    const adapter = asset ? this.adapters.get(asset.type) : null;
-
-    if (!asset || !adapter) return new Big(0);
+    const asset = this.getAsset(assetId);
+    const adapter = this.getAdapter(asset.type);
 
     return adapter.getBalance(ownerAddress, asset);
   }
 
   async getTransactions(ownerAddress: Address, assetId: string): Promise<Transaction[]> {
-    const asset = this.getById(assetId);
-    const adapter = asset ? this.adapters.get(asset.type) : null;
-
-    if (!asset || !adapter) return [];
+    const asset = this.getAsset(assetId);
+    const adapter = this.getAdapter(asset.type);
 
     return adapter.getTransactions(ownerAddress, asset);
   }
 
-  async requestTransaction<S>(
-    adapterId: string,
-    session: S,
-    assetId: string,
-    request: TransactionRequest,
-  ): Promise<void> {
-    const asset = this.getById(assetId);
-    const adapter = asset ? this.adapters.get(asset.type) : null;
+  private getAdapter(assetType: AssetType): AssetAdapter {
+    const adapter = this.adapters.get(assetType);
 
-    if (!asset || !adapter) {
-      throw new Error('Asset either does not exist or unsupported.');
+    if (!adapter) {
+      throw new Error('Adapter is not registered.');
     }
 
-    return adapter.requestTransaction(adapterId, session, asset, request);
-  }
-
-  async requestSwap<S>(
-    adapterId: string,
-    session: S,
-    assetId: string,
-    poolContractAddress: Address,
-    tradeDirection: TradeDirection,
-    sourceAmountIn: BN | number,
-    minimumAmountOut: BN | number,
-    queryId: BN | number,
-  ): Promise<void> {
-    const asset = this.getById(assetId);
-    const adapter = asset ? this.adapters.get(asset.type) : null;
-
-    if (!asset || !adapter) {
-      throw new Error('Asset either does not exist or unsupported.');
-    }
-
-    return adapter.requestSwap(
-      adapterId,
-      session,
-      asset,
-      poolContractAddress,
-      tradeDirection,
-      sourceAmountIn,
-      minimumAmountOut,
-      queryId,
-    );
+    return adapter;
   }
 }

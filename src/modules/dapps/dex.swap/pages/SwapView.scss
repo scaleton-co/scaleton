@@ -1,0 +1,23 @@
+.swap-button-section {
+  margin-top: 16px;
+
+  .ant-tooltip-disabled-compatible-wrapper {
+    width: 100%;
+  }
+
+  .ant-btn[type="button"] {
+    width: 100%;
+  }
+}
+
+.trade-direction {
+  text-align: center;
+
+  //.reverse-trade-direction {
+  //  display: none;
+  //}
+
+  &:hover {
+
+  }
+}
