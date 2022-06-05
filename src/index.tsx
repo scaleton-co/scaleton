@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/react';
 import React from 'react';
+import { isMobile } from 'react-device-detect';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
@@ -27,7 +28,9 @@ if (isMainnet() || isTestnet()) {
   walletService.registerAdapter('tonkeeper', new TonkeeperWalletAdapter(store));
 }
 
-walletService.registerAdapter('ton-wallet', new TonWalletWalletAdapter(tonClient, new TonWalletClient(window)));
+if (!isMobile) {
+  walletService.registerAdapter('ton-wallet', new TonWalletWalletAdapter(tonClient, new TonWalletClient(window)));
+}
 
 if (isMainnet() || isSandbox()) {
   walletService.registerAdapter('tonhub', new TonhubWalletAdapter(

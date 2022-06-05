@@ -4,6 +4,7 @@ import { MenuTheme } from 'antd/lib/menu/MenuContext';
 import React from 'react';
 import { WalletIcon } from './WalletIcon/WalletIcon';
 import { isMainnet, isSandbox, isTestnet } from '../../../common/network';
+import { isMobile } from "react-device-detect";
 
 export function ConnectWalletDropdownMenu({
   handleConnectTonkeeper,
@@ -19,20 +20,21 @@ export function ConnectWalletDropdownMenu({
   const wallets: ItemType[] = [];
 
   if (isMainnet() || isTestnet()) {
-    wallets.push(
-      {
-        key: 'tonkeeper',
-        label: 'Tonkeeper',
-        icon: <WalletIcon wallet="tonkeeper"/>,
-        onClick: handleConnectTonkeeper,
-      },
-      {
+    wallets.push({
+      key: 'tonkeeper',
+      label: 'Tonkeeper',
+      icon: <WalletIcon wallet="tonkeeper"/>,
+      onClick: handleConnectTonkeeper,
+    });
+
+    if (!isMobile) {
+      wallets.push({
         key: 'ton-wallet',
         label: 'TON Wallet',
         icon: <WalletIcon wallet="ton-wallet"/>,
         onClick: handleConnectTonWallet,
-      },
-    )
+      });
+    }
   }
 
   if (isMainnet() || isSandbox()) {

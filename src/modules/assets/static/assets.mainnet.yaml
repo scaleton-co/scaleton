@@ -5,11 +5,11 @@
   symbol: TON
   url: https://ton.org
 
-- id: jetton:0:0e3ad32b1d8fd38fdf9a5b6fe2032b6d2dbaa5803a70f05d6450cf4b7065116a
+- id: jetton:0:65aac9b5e380eae928db3c8e238d9bc0d61a9320fdc2bc7a2f6c87d6fedf9208
   type: jetton
   name: Scaleton
   symbol: SCALE
-  contractAddress: EQAOOtMrHY_Tj9-aW2_iAyttLbqlgDpw8F1kUM9LcGURakhl
+  contractAddress: EQBlqsm144Dq6SjbPI4jjZvA1hqTIP3CvHovbIfW_t-SCALE
   image: ipfs://QmSMiXsZYMefwrTQ3P6HnDQaCpecS4EWLpgKK5EX1G8iA8
   url: https://scaleton.co
 
