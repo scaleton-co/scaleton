@@ -1,10 +1,9 @@
 import { Menu } from 'antd';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import { MenuTheme } from 'antd/lib/menu/MenuContext';
-import React from 'react';
+import { isMobile } from 'react-device-detect';
 import { WalletIcon } from './WalletIcon/WalletIcon';
 import { isMainnet, isSandbox, isTestnet } from '../../../common/network';
-import { isMobile } from "react-device-detect";
 
 export function ConnectWalletDropdownMenu({
   handleConnectTonkeeper,
