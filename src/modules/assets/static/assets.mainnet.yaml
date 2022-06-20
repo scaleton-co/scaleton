@@ -13,6 +13,14 @@
   image: ipfs://QmSMiXsZYMefwrTQ3P6HnDQaCpecS4EWLpgKK5EX1G8iA8
   url: https://scaleton.co
 
+- id: jetton:0:5d4797ee7ca47227f6424fc827ae95ba69a97a733d0a5a3af8ae58a6c7ea2699
+  type: jetton
+  name: SCAM Jetton
+  symbol: SCAM
+  contractAddress: EQBdR5fufKRyJ_ZCT8gnrpW6aal6cz0KWjr4rlimx-ommXvf
+  image: ipfs://bafkreihbvg33rcwsqc74hydu72oy3vk76jmqpaefywgdufdp4pkgacog7i
+  url: https://t.me/scamoton
+
 - id: jetton:0:2f0df5851b4a185f5f63c0d0cd0412f5aca353f577da18ff47c936f99dbd849a
   type: jetton
   name: Tegro
