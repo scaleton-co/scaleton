@@ -8,7 +8,7 @@ import { requestTransfer } from './actions/requestTransfer';
 import { WalletFeature } from '../common/WalletFeature';
 import { API_URLS, scaletonClient } from '../../common';
 import { CURRENT_NETWORK } from '../../common/network';
-import { DEFAULT_JETTON_GAS_FEE } from '../common/constants';
+import { DEFAULT_JETTON_FORWARD_AMOUNT, DEFAULT_JETTON_GAS_FEE } from '../common/constants';
 import { preloadImage } from '../../common/utils/preloadImage';
 import tonkeeperIcon from '../common/components/WalletIcon/icons/tonkeeper.svg';
 
@@ -104,7 +104,7 @@ export class TonkeeperWalletAdapter implements WalletAdapter<TonkeeperSession> {
     amount: string,
     forwardPayload: string,
     requestTimeout: number,
-    forwardAmount: number = 0,
+    forwardAmount: number = DEFAULT_JETTON_FORWARD_AMOUNT,
     gasFee: number = DEFAULT_JETTON_GAS_FEE,
   ): Promise<void> {
     throw new Error('Not supported.');

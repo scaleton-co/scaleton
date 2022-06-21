@@ -6,7 +6,7 @@ import { Wallet } from '../common/Wallet';
 import { WalletAdapter } from '../common/WalletAdapter';
 import { WalletFeature } from '../common/WalletFeature';
 import { JettonMasterContract } from '../../contracts/JettonMasterContract';
-import { DEFAULT_JETTON_GAS_FEE } from '../common/constants';
+import { DEFAULT_JETTON_FORWARD_AMOUNT, DEFAULT_JETTON_GAS_FEE } from '../common/constants';
 import { preloadImage } from '../../common/utils/preloadImage';
 import { isMainnet } from '../../common/network';
 import sandboxIcon from '../common/components/WalletIcon/icons/sandbox.png';
@@ -131,7 +131,7 @@ export class TonhubWalletAdapter implements WalletAdapter<TonhubSession> {
     amount: string,
     forwardPayload: string,
     requestTimeout: number,
-    forwardAmount: number = 0,
+    forwardAmount: number = DEFAULT_JETTON_FORWARD_AMOUNT,
     gasFee: number = DEFAULT_JETTON_GAS_FEE,
   ): Promise<void> {
     const contract = new JettonMasterContract(this.tonClient, null as any, Address.parse(contractAddress));

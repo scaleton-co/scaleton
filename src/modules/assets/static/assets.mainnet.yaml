@@ -27,3 +27,9 @@
   symbol: TGR
   contractAddress: EQAvDfWFG0oYX19jwNDNBBL1rKNT9XfaGP9HyTb5nb2Eml6y
   image: https://tegro.io/tgr.png
+
+- id: jetton:0:f4bdd480fcd79d47dbaf6e037d1229115feb2e7ac0f119e160ebd5d031abdf2e
+  type: jetton
+  name: Bolt
+  symbol: BOLT
+  contractAddress: EQD0vdSA_NedR9uvbgN9EikRX-suesDxGeFg69XQMavfLqIw

@@ -1,1 +1,2 @@
-export const DEFAULT_JETTON_GAS_FEE = 0.035;
+export const DEFAULT_JETTON_GAS_FEE = 0.045;
+export const DEFAULT_JETTON_FORWARD_AMOUNT = 0.01;
