@@ -1,4 +1,4 @@
-import { JettonOperation } from "../enums/JettonOperation";
+import { JettonOperation } from '../enums/JettonOperation';
 
 export interface JettonBurnTransaction {
   operation: JettonOperation.BURN;

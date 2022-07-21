@@ -1,4 +1,4 @@
-import { JettonOperation } from "../enums/JettonOperation";
+import { JettonOperation } from '../enums/JettonOperation';
 
 export interface JettonIncomeTransaction {
   operation: JettonOperation.INTERNAL_TRANSFER;
