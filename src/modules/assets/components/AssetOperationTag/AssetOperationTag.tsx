@@ -19,7 +19,7 @@ export function AssetOperationTag({ type }: AssetOperationTagProps) {
       return <Tag color="cyan" className="asset-operation-tag">MINT</Tag>;
 
     case 'burn':
-      return <Tag color="red" className="asset-operation-tag">BURN</Tag>;
+      return <Tag color="volcano" className="asset-operation-tag">BURN</Tag>;
 
     default:
       return <Tag color="grey" className="asset-operation-tag">UNKNOWN</Tag>;

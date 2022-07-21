@@ -38,7 +38,11 @@ export class JettonAssetAdapter implements AssetAdapter {
       return jettonTransactions.map((jettonTransaction): Transaction => ({
         queryId: new BN(jettonTransaction.queryId),
         time: new Date(jettonTransaction.time * 1000),
-        operation: jettonTransaction.operation === JettonOperation.TRANSFER ? 'out' : (jettonTransaction.from ? 'in' : 'mint'),
+        operation: jettonTransaction.operation === JettonOperation.TRANSFER
+          ? 'out'
+          : (jettonTransaction.operation === JettonOperation.BURN
+            ? 'burn'
+            : (jettonTransaction.from ? 'in' : 'mint')),
         from: jettonTransaction.operation === JettonOperation.INTERNAL_TRANSFER
           ? (jettonTransaction.from ? Address.parse(jettonTransaction.from) : null)
           : ownerAddress,
@@ -46,7 +50,9 @@ export class JettonAssetAdapter implements AssetAdapter {
           ? (jettonTransaction.destination ? Address.parse(jettonTransaction.destination) : null)
           : ownerAddress,
         amount: new Big(jettonTransaction.amount).div(1_000_000_000),
-        comment: jettonTransaction.comment,
+        comment: jettonTransaction.operation === JettonOperation.TRANSFER || jettonTransaction.operation === JettonOperation.INTERNAL_TRANSFER
+          ? jettonTransaction.comment
+          : null,
         body: null,
       }));
     } catch {

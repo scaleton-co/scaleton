@@ -5,6 +5,7 @@ import { parseInternalTransferTransaction } from './parsers/parseInternalTransfe
 import { parseTransferTransaction } from './parsers/parseTransferTransaction';
 import type { JettonTransaction } from '../jettons/types/JettonTransaction';
 import type { TonClient, Contract, ContractSource } from 'ton';
+import { parseBurnTransaction } from './parsers/parseBurnTransaction';
 
 export class JettonWalletContract implements Contract {
   constructor(
@@ -52,6 +53,9 @@ export class JettonWalletContract implements Contract {
 
           case JettonOperation.INTERNAL_TRANSFER:
             return parseInternalTransferTransaction(bodySlice, transaction);
+
+          case JettonOperation.BURN:
+            return parseBurnTransaction(bodySlice, transaction);
 
           default:
             return null; // Unknown operation
