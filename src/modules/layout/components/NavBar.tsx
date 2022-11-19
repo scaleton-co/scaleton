@@ -55,7 +55,7 @@ export function NavBar() {
               isMainnet() ? ({
                 key: 'dapps.dex.swap',
                 label: (
-                  <a href="https://dedust.io" target="_blank">
+                  <a href="https://dedust.io" target="_blank" rel="noreferrer">
                     DEX <Tag color="#f50" style={{ marginLeft: 7 }}>NEW</Tag>
                   </a>
                 ),
