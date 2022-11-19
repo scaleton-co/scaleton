@@ -55,9 +55,9 @@ export function NavBar() {
               isMainnet() ? ({
                 key: 'dapps.dex.swap',
                 label: (
-                  <Tooltip placement="bottomRight" title="Currently, DEX is available only in testnet.">
+                  <Link to="https://dedust.io">
                     DEX <Tag color="#f50" style={{ marginLeft: 7 }}>NEW</Tag>
-                  </Tooltip>
+                  </Link>
                 ),
                 style: {
                   cursor: 'not-allowed',
