@@ -1,5 +1,5 @@
 import { WalletOutlined } from '@ant-design/icons';
-import { Button, Col, Dropdown, Layout, Menu, Row, Tag, Tooltip, Typography } from 'antd';
+import { Button, Col, Dropdown, Layout, Menu, Row, Tag, Typography } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../../hooks';
